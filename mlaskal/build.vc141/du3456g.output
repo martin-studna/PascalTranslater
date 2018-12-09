@@ -1,0 +1,4220 @@
+Terminals unused in grammar
+
+   RECORD
+
+
+Grammar
+
+    0 $accept: mlaskal "end of file"
+
+    1 mlaskal: PROGRAM IDENTIFIER SEMICOLON block_P DOT
+
+    2 block_P: start_block const_block
+    3        | const_block
+
+    4 start_block: LABEL C1 SEMICOLON
+
+    5 const_block: CONST C2 type_block
+    6            | type_block
+
+    7 type_block: TYPE C3 var_block
+    8           | var_block
+
+    9 var_block: VAR C5 procedure_block
+   10          | procedure_block
+
+   11 procedure_block: end_block
+   12                | C7 end_block
+
+   13 end_block: BEGIN state_cycle END
+
+   14 C1: UINT
+   15   | C1 COMMA UINT
+
+   16 C2: IDENTIFIER EQ constant SEMICOLON
+   17   | C2 IDENTIFIER EQ constant SEMICOLON
+
+   18 C3: IDENTIFIER EQ type SEMICOLON
+   19   | C3 IDENTIFIER EQ type SEMICOLON
+
+   20 C4: IDENTIFIER
+   21   | C4 COMMA IDENTIFIER
+
+   22 C5: C4 COLON type SEMICOLON
+   23   | C5 C4 COLON type SEMICOLON
+
+   24 C7: procedure_header SEMICOLON block SEMICOLON
+   25   | function_header SEMICOLON block SEMICOLON
+   26   | C7 procedure_header SEMICOLON block SEMICOLON
+   27   | C7 function_header SEMICOLON block SEMICOLON
+
+   28 block: start_block const_block2
+   29      | const_block2
+
+   30 const_block2: CONST C2 type_block2
+   31             | type_block2
+
+   32 type_block2: TYPE C3 var_block2
+   33            | var_block2
+
+   34 var_block2: VAR C5 end_block
+   35           | end_block
+
+   36 procedure_header: PROCEDURE IDENTIFIER
+   37                 | PROCEDURE IDENTIFIER LPAR form_par RPAR
+
+   38 function_header: FUNCTION IDENTIFIER COLON IDENTIFIER
+   39                | FUNCTION IDENTIFIER LPAR form_par RPAR COLON IDENTIFIER
+
+   40 form_par: VAR id_cycl COLON IDENTIFIER
+   41         | id_cycl COLON IDENTIFIER
+   42         | form_par SEMICOLON VAR id_cycl COLON IDENTIFIER
+   43         | form_par SEMICOLON id_cycl COLON IDENTIFIER
+
+   44 id_cycl: IDENTIFIER
+   45        | id_cycl COMMA IDENTIFIER
+
+   46 type: ord_type
+   47     | IDENTIFIER
+   48     | struc_type
+
+   49 struc_type: ARRAY LSBRA ord_type_cycl RSBRA OF type
+
+   50 ord_type: ord_const DOTDOT ord_const
+
+   51 ord_type_cycl: ord_type
+   52              | ord_type_cycl COMMA ord_type
+
+   53 statement: %empty
+   54          | D0 variable ASSIGN expression
+   55          | D0 IDENTIFIER
+   56          | D0 IDENTIFIER LPAR real_par RPAR
+   57          | D0 GOTO UINT
+   58          | D0 BEGIN state_cycle END
+   59          | D0 IF expression THEN statement
+   60          | D0 IF expression THEN statement2 ELSE statement
+   61          | D0 WHILE expression DO statement
+   62          | D0 REPEAT state_cycle UNTIL expression
+   63          | D0 FOR IDENTIFIER ASSIGN expression FOR_DIRECTION expression DO statement
+
+   64 statement2: %empty
+   65           | D0 variable ASSIGN expression
+   66           | D0 IDENTIFIER
+   67           | D0 IDENTIFIER LPAR real_par RPAR
+   68           | D0 GOTO UINT
+   69           | D0 BEGIN state_cycle END
+   70           | D0 IF expression THEN statement2 ELSE statement2
+   71           | D0 WHILE expression DO statement2
+   72           | D0 REPEAT state_cycle UNTIL expression
+   73           | D0 FOR IDENTIFIER ASSIGN expression FOR_DIRECTION expression DO statement2
+
+   74 D0: UINT COLON
+   75   | %empty
+
+   76 state_cycle: statement
+   77            | state_cycle SEMICOLON statement
+
+   78 variable: variable LSBRA ord_expr_cylc RSBRA
+   79         | IDENTIFIER
+
+   80 variable_withoutID: variable LSBRA ord_expr_cylc RSBRA
+
+   81 ord_expr_cylc: expression
+   82              | ord_expr_cylc COMMA expression
+
+   83 real_par: expression
+   84         | real_par COMMA expression
+
+   85 expression: simp_expression
+   86           | simp_expression OPER_REL simp_expression
+   87           | simp_expression EQ simp_expression
+
+   88 simp_expression: OPER_SIGNADD term_oper
+   89                | term_oper
+
+   90 term_oper: term_oper OPER_SIGNADD term
+   91          | term_oper OR term
+   92          | term
+
+   93 term: factor
+   94     | term OPER_MUL factor
+
+   95 factor: unsigned_const_withoutID
+   96       | variable_withoutID
+   97       | IDENTIFIER
+   98       | IDENTIFIER LPAR real_par RPAR
+   99       | LPAR expression RPAR
+  100       | NOT factor
+
+  101 ord_const: IDENTIFIER
+  102          | OPER_SIGNADD IDENTIFIER
+  103          | OPER_SIGNADD UINT
+  104          | UINT
+
+  105 unsigned_const_withoutID: REAL
+  106                         | STRING
+  107                         | UINT
+
+  108 unsigned_const: UINT
+  109               | REAL
+  110               | STRING
+  111               | IDENTIFIER
+
+  112 constant: unsigned_const
+  113         | OPER_SIGNADD UINT
+  114         | OPER_SIGNADD REAL
+
+
+Terminals, with rules where they appear
+
+"end of file" (0) 0
+error (256)
+PROGRAM (258) 1
+LABEL (259) 4
+CONST (260) 5 30
+TYPE (261) 7 32
+VAR (262) 9 34 40 42
+BEGIN (263) 13 58 69
+END (264) 13 58 69
+PROCEDURE (265) 36 37
+FUNCTION (266) 38 39
+ARRAY (267) 49
+OF (268) 49
+GOTO (269) 57 68
+IF (270) 59 60 70
+THEN (271) 59 60 70
+ELSE (272) 60 70
+WHILE (273) 61 71
+DO (274) 61 63 71 73
+REPEAT (275) 62 72
+UNTIL (276) 62 72
+FOR (277) 63 73
+OR (278) 91
+NOT (279) 100
+RECORD (280)
+IDENTIFIER (281) 1 16 17 18 19 20 21 36 37 38 39 40 41 42 43 44 45
+    47 55 56 63 66 67 73 79 97 98 101 102 111
+UINT (282) 14 15 57 68 74 103 104 107 108 113
+REAL (283) 105 109 114
+STRING (284) 106 110
+SEMICOLON (285) 1 4 16 17 18 19 22 23 24 25 26 27 42 43 77
+DOT (286) 1
+COMMA (287) 15 21 45 52 82 84
+EQ (288) 16 17 18 19 87
+COLON (289) 22 23 38 39 40 41 42 43 74
+LPAR (290) 37 39 56 67 98 99
+RPAR (291) 37 39 56 67 98 99
+DOTDOT (292) 50
+LSBRA (293) 49 78 80
+RSBRA (294) 49 78 80
+ASSIGN (295) 54 63 65 73
+OPER_REL (296) 86
+OPER_SIGNADD (297) 88 90 102 103 113 114
+OPER_MUL (298) 94
+FOR_DIRECTION (299) 63 73
+
+
+Nonterminals, with rules where they appear
+
+$accept (45)
+    on left: 0
+mlaskal (46)
+    on left: 1, on right: 0
+block_P (47)
+    on left: 2 3, on right: 1
+start_block (48)
+    on left: 4, on right: 2 28
+const_block (49)
+    on left: 5 6, on right: 2 3
+type_block (50)
+    on left: 7 8, on right: 5 6
+var_block (51)
+    on left: 9 10, on right: 7 8
+procedure_block (52)
+    on left: 11 12, on right: 9 10
+end_block (53)
+    on left: 13, on right: 11 12 34 35
+C1 (54)
+    on left: 14 15, on right: 4 15
+C2 (55)
+    on left: 16 17, on right: 5 17 30
+C3 (56)
+    on left: 18 19, on right: 7 19 32
+C4 (57)
+    on left: 20 21, on right: 21 22 23
+C5 (58)
+    on left: 22 23, on right: 9 23 34
+C7 (59)
+    on left: 24 25 26 27, on right: 12 26 27
+block (60)
+    on left: 28 29, on right: 24 25 26 27
+const_block2 (61)
+    on left: 30 31, on right: 28 29
+type_block2 (62)
+    on left: 32 33, on right: 30 31
+var_block2 (63)
+    on left: 34 35, on right: 32 33
+procedure_header (64)
+    on left: 36 37, on right: 24 26
+function_header (65)
+    on left: 38 39, on right: 25 27
+form_par (66)
+    on left: 40 41 42 43, on right: 37 39 42 43
+id_cycl (67)
+    on left: 44 45, on right: 40 41 42 43 45
+type (68)
+    on left: 46 47 48, on right: 18 19 22 23 49
+struc_type (69)
+    on left: 49, on right: 48
+ord_type (70)
+    on left: 50, on right: 46 51 52
+ord_type_cycl (71)
+    on left: 51 52, on right: 49 52
+statement (72)
+    on left: 53 54 55 56 57 58 59 60 61 62 63, on right: 59 60 61 63
+    76 77
+statement2 (73)
+    on left: 64 65 66 67 68 69 70 71 72 73, on right: 60 70 71 73
+D0 (74)
+    on left: 74 75, on right: 54 55 56 57 58 59 60 61 62 63 65 66 67
+    68 69 70 71 72 73
+state_cycle (75)
+    on left: 76 77, on right: 13 58 62 69 72 77
+variable (76)
+    on left: 78 79, on right: 54 65 78 80
+variable_withoutID (77)
+    on left: 80, on right: 96
+ord_expr_cylc (78)
+    on left: 81 82, on right: 78 80 82
+real_par (79)
+    on left: 83 84, on right: 56 67 84 98
+expression (80)
+    on left: 85 86 87, on right: 54 59 60 61 62 63 65 70 71 72 73 81
+    82 83 84 99
+simp_expression (81)
+    on left: 88 89, on right: 85 86 87
+term_oper (82)
+    on left: 90 91 92, on right: 88 89 90 91
+term (83)
+    on left: 93 94, on right: 90 91 92 94
+factor (84)
+    on left: 95 96 97 98 99 100, on right: 93 94 100
+ord_const (85)
+    on left: 101 102 103 104, on right: 50
+unsigned_const_withoutID (86)
+    on left: 105 106 107, on right: 95
+unsigned_const (87)
+    on left: 108 109 110 111, on right: 112
+constant (88)
+    on left: 112 113 114, on right: 16 17
+
+
+State 0
+
+    0 $accept: . mlaskal "end of file"
+    1 mlaskal: . PROGRAM IDENTIFIER SEMICOLON block_P DOT
+
+    PROGRAM  shift, and go to state 1
+
+    mlaskal  go to state 2
+
+
+State 1
+
+    1 mlaskal: PROGRAM . IDENTIFIER SEMICOLON block_P DOT
+
+    IDENTIFIER  shift, and go to state 3
+
+
+State 2
+
+    0 $accept: mlaskal . "end of file"
+
+    "end of file"  shift, and go to state 4
+
+
+State 3
+
+    1 mlaskal: PROGRAM IDENTIFIER . SEMICOLON block_P DOT
+
+    SEMICOLON  shift, and go to state 5
+
+
+State 4
+
+    0 $accept: mlaskal "end of file" .
+
+    $default  accept
+
+
+State 5
+
+    1 mlaskal: PROGRAM IDENTIFIER SEMICOLON . block_P DOT
+    2 block_P: . start_block const_block
+    3        | . const_block
+    4 start_block: . LABEL C1 SEMICOLON
+    5 const_block: . CONST C2 type_block
+    6            | . type_block
+    7 type_block: . TYPE C3 var_block
+    8           | . var_block
+    9 var_block: . VAR C5 procedure_block
+   10          | . procedure_block
+   11 procedure_block: . end_block
+   12                | . C7 end_block
+   13 end_block: . BEGIN state_cycle END
+   24 C7: . procedure_header SEMICOLON block SEMICOLON
+   25   | . function_header SEMICOLON block SEMICOLON
+   26   | . C7 procedure_header SEMICOLON block SEMICOLON
+   27   | . C7 function_header SEMICOLON block SEMICOLON
+   36 procedure_header: . PROCEDURE IDENTIFIER
+   37                 | . PROCEDURE IDENTIFIER LPAR form_par RPAR
+   38 function_header: . FUNCTION IDENTIFIER COLON IDENTIFIER
+   39                | . FUNCTION IDENTIFIER LPAR form_par RPAR COLON IDENTIFIER
+
+    LABEL      shift, and go to state 6
+    CONST      shift, and go to state 7
+    TYPE       shift, and go to state 8
+    VAR        shift, and go to state 9
+    BEGIN      shift, and go to state 10
+    PROCEDURE  shift, and go to state 11
+    FUNCTION   shift, and go to state 12
+
+    block_P           go to state 13
+    start_block       go to state 14
+    const_block       go to state 15
+    type_block        go to state 16
+    var_block         go to state 17
+    procedure_block   go to state 18
+    end_block         go to state 19
+    C7                go to state 20
+    procedure_header  go to state 21
+    function_header   go to state 22
+
+
+State 6
+
+    4 start_block: LABEL . C1 SEMICOLON
+   14 C1: . UINT
+   15   | . C1 COMMA UINT
+
+    UINT  shift, and go to state 23
+
+    C1  go to state 24
+
+
+State 7
+
+    5 const_block: CONST . C2 type_block
+   16 C2: . IDENTIFIER EQ constant SEMICOLON
+   17   | . C2 IDENTIFIER EQ constant SEMICOLON
+
+    IDENTIFIER  shift, and go to state 25
+
+    C2  go to state 26
+
+
+State 8
+
+    7 type_block: TYPE . C3 var_block
+   18 C3: . IDENTIFIER EQ type SEMICOLON
+   19   | . C3 IDENTIFIER EQ type SEMICOLON
+
+    IDENTIFIER  shift, and go to state 27
+
+    C3  go to state 28
+
+
+State 9
+
+    9 var_block: VAR . C5 procedure_block
+   20 C4: . IDENTIFIER
+   21   | . C4 COMMA IDENTIFIER
+   22 C5: . C4 COLON type SEMICOLON
+   23   | . C5 C4 COLON type SEMICOLON
+
+    IDENTIFIER  shift, and go to state 29
+
+    C4  go to state 30
+    C5  go to state 31
+
+
+State 10
+
+   13 end_block: BEGIN . state_cycle END
+   53 statement: . %empty  [END, SEMICOLON]
+   54          | . D0 variable ASSIGN expression
+   55          | . D0 IDENTIFIER
+   56          | . D0 IDENTIFIER LPAR real_par RPAR
+   57          | . D0 GOTO UINT
+   58          | . D0 BEGIN state_cycle END
+   59          | . D0 IF expression THEN statement
+   60          | . D0 IF expression THEN statement2 ELSE statement
+   61          | . D0 WHILE expression DO statement
+   62          | . D0 REPEAT state_cycle UNTIL expression
+   63          | . D0 FOR IDENTIFIER ASSIGN expression FOR_DIRECTION expression DO statement
+   74 D0: . UINT COLON
+   75   | . %empty  [BEGIN, GOTO, IF, WHILE, REPEAT, FOR, IDENTIFIER]
+   76 state_cycle: . statement
+   77            | . state_cycle SEMICOLON statement
+
+    UINT  shift, and go to state 32
+
+    END        reduce using rule 53 (statement)
+    SEMICOLON  reduce using rule 53 (statement)
+    $default   reduce using rule 75 (D0)
+
+    statement    go to state 33
+    D0           go to state 34
+    state_cycle  go to state 35
+
+
+State 11
+
+   36 procedure_header: PROCEDURE . IDENTIFIER
+   37                 | PROCEDURE . IDENTIFIER LPAR form_par RPAR
+
+    IDENTIFIER  shift, and go to state 36
+
+
+State 12
+
+   38 function_header: FUNCTION . IDENTIFIER COLON IDENTIFIER
+   39                | FUNCTION . IDENTIFIER LPAR form_par RPAR COLON IDENTIFIER
+
+    IDENTIFIER  shift, and go to state 37
+
+
+State 13
+
+    1 mlaskal: PROGRAM IDENTIFIER SEMICOLON block_P . DOT
+
+    DOT  shift, and go to state 38
+
+
+State 14
+
+    2 block_P: start_block . const_block
+    5 const_block: . CONST C2 type_block
+    6            | . type_block
+    7 type_block: . TYPE C3 var_block
+    8           | . var_block
+    9 var_block: . VAR C5 procedure_block
+   10          | . procedure_block
+   11 procedure_block: . end_block
+   12                | . C7 end_block
+   13 end_block: . BEGIN state_cycle END
+   24 C7: . procedure_header SEMICOLON block SEMICOLON
+   25   | . function_header SEMICOLON block SEMICOLON
+   26   | . C7 procedure_header SEMICOLON block SEMICOLON
+   27   | . C7 function_header SEMICOLON block SEMICOLON
+   36 procedure_header: . PROCEDURE IDENTIFIER
+   37                 | . PROCEDURE IDENTIFIER LPAR form_par RPAR
+   38 function_header: . FUNCTION IDENTIFIER COLON IDENTIFIER
+   39                | . FUNCTION IDENTIFIER LPAR form_par RPAR COLON IDENTIFIER
+
+    CONST      shift, and go to state 7
+    TYPE       shift, and go to state 8
+    VAR        shift, and go to state 9
+    BEGIN      shift, and go to state 10
+    PROCEDURE  shift, and go to state 11
+    FUNCTION   shift, and go to state 12
+
+    const_block       go to state 39
+    type_block        go to state 16
+    var_block         go to state 17
+    procedure_block   go to state 18
+    end_block         go to state 19
+    C7                go to state 20
+    procedure_header  go to state 21
+    function_header   go to state 22
+
+
+State 15
+
+    3 block_P: const_block .
+
+    $default  reduce using rule 3 (block_P)
+
+
+State 16
+
+    6 const_block: type_block .
+
+    $default  reduce using rule 6 (const_block)
+
+
+State 17
+
+    8 type_block: var_block .
+
+    $default  reduce using rule 8 (type_block)
+
+
+State 18
+
+   10 var_block: procedure_block .
+
+    $default  reduce using rule 10 (var_block)
+
+
+State 19
+
+   11 procedure_block: end_block .
+
+    $default  reduce using rule 11 (procedure_block)
+
+
+State 20
+
+   12 procedure_block: C7 . end_block
+   13 end_block: . BEGIN state_cycle END
+   26 C7: C7 . procedure_header SEMICOLON block SEMICOLON
+   27   | C7 . function_header SEMICOLON block SEMICOLON
+   36 procedure_header: . PROCEDURE IDENTIFIER
+   37                 | . PROCEDURE IDENTIFIER LPAR form_par RPAR
+   38 function_header: . FUNCTION IDENTIFIER COLON IDENTIFIER
+   39                | . FUNCTION IDENTIFIER LPAR form_par RPAR COLON IDENTIFIER
+
+    BEGIN      shift, and go to state 10
+    PROCEDURE  shift, and go to state 11
+    FUNCTION   shift, and go to state 12
+
+    end_block         go to state 40
+    procedure_header  go to state 41
+    function_header   go to state 42
+
+
+State 21
+
+   24 C7: procedure_header . SEMICOLON block SEMICOLON
+
+    SEMICOLON  shift, and go to state 43
+
+
+State 22
+
+   25 C7: function_header . SEMICOLON block SEMICOLON
+
+    SEMICOLON  shift, and go to state 44
+
+
+State 23
+
+   14 C1: UINT .
+
+    $default  reduce using rule 14 (C1)
+
+
+State 24
+
+    4 start_block: LABEL C1 . SEMICOLON
+   15 C1: C1 . COMMA UINT
+
+    SEMICOLON  shift, and go to state 45
+    COMMA      shift, and go to state 46
+
+
+State 25
+
+   16 C2: IDENTIFIER . EQ constant SEMICOLON
+
+    EQ  shift, and go to state 47
+
+
+State 26
+
+    5 const_block: CONST C2 . type_block
+    7 type_block: . TYPE C3 var_block
+    8           | . var_block
+    9 var_block: . VAR C5 procedure_block
+   10          | . procedure_block
+   11 procedure_block: . end_block
+   12                | . C7 end_block
+   13 end_block: . BEGIN state_cycle END
+   17 C2: C2 . IDENTIFIER EQ constant SEMICOLON
+   24 C7: . procedure_header SEMICOLON block SEMICOLON
+   25   | . function_header SEMICOLON block SEMICOLON
+   26   | . C7 procedure_header SEMICOLON block SEMICOLON
+   27   | . C7 function_header SEMICOLON block SEMICOLON
+   36 procedure_header: . PROCEDURE IDENTIFIER
+   37                 | . PROCEDURE IDENTIFIER LPAR form_par RPAR
+   38 function_header: . FUNCTION IDENTIFIER COLON IDENTIFIER
+   39                | . FUNCTION IDENTIFIER LPAR form_par RPAR COLON IDENTIFIER
+
+    TYPE        shift, and go to state 8
+    VAR         shift, and go to state 9
+    BEGIN       shift, and go to state 10
+    PROCEDURE   shift, and go to state 11
+    FUNCTION    shift, and go to state 12
+    IDENTIFIER  shift, and go to state 48
+
+    type_block        go to state 49
+    var_block         go to state 17
+    procedure_block   go to state 18
+    end_block         go to state 19
+    C7                go to state 20
+    procedure_header  go to state 21
+    function_header   go to state 22
+
+
+State 27
+
+   18 C3: IDENTIFIER . EQ type SEMICOLON
+
+    EQ  shift, and go to state 50
+
+
+State 28
+
+    7 type_block: TYPE C3 . var_block
+    9 var_block: . VAR C5 procedure_block
+   10          | . procedure_block
+   11 procedure_block: . end_block
+   12                | . C7 end_block
+   13 end_block: . BEGIN state_cycle END
+   19 C3: C3 . IDENTIFIER EQ type SEMICOLON
+   24 C7: . procedure_header SEMICOLON block SEMICOLON
+   25   | . function_header SEMICOLON block SEMICOLON
+   26   | . C7 procedure_header SEMICOLON block SEMICOLON
+   27   | . C7 function_header SEMICOLON block SEMICOLON
+   36 procedure_header: . PROCEDURE IDENTIFIER
+   37                 | . PROCEDURE IDENTIFIER LPAR form_par RPAR
+   38 function_header: . FUNCTION IDENTIFIER COLON IDENTIFIER
+   39                | . FUNCTION IDENTIFIER LPAR form_par RPAR COLON IDENTIFIER
+
+    VAR         shift, and go to state 9
+    BEGIN       shift, and go to state 10
+    PROCEDURE   shift, and go to state 11
+    FUNCTION    shift, and go to state 12
+    IDENTIFIER  shift, and go to state 51
+
+    var_block         go to state 52
+    procedure_block   go to state 18
+    end_block         go to state 19
+    C7                go to state 20
+    procedure_header  go to state 21
+    function_header   go to state 22
+
+
+State 29
+
+   20 C4: IDENTIFIER .
+
+    $default  reduce using rule 20 (C4)
+
+
+State 30
+
+   21 C4: C4 . COMMA IDENTIFIER
+   22 C5: C4 . COLON type SEMICOLON
+
+    COMMA  shift, and go to state 53
+    COLON  shift, and go to state 54
+
+
+State 31
+
+    9 var_block: VAR C5 . procedure_block
+   11 procedure_block: . end_block
+   12                | . C7 end_block
+   13 end_block: . BEGIN state_cycle END
+   20 C4: . IDENTIFIER
+   21   | . C4 COMMA IDENTIFIER
+   23 C5: C5 . C4 COLON type SEMICOLON
+   24 C7: . procedure_header SEMICOLON block SEMICOLON
+   25   | . function_header SEMICOLON block SEMICOLON
+   26   | . C7 procedure_header SEMICOLON block SEMICOLON
+   27   | . C7 function_header SEMICOLON block SEMICOLON
+   36 procedure_header: . PROCEDURE IDENTIFIER
+   37                 | . PROCEDURE IDENTIFIER LPAR form_par RPAR
+   38 function_header: . FUNCTION IDENTIFIER COLON IDENTIFIER
+   39                | . FUNCTION IDENTIFIER LPAR form_par RPAR COLON IDENTIFIER
+
+    BEGIN       shift, and go to state 10
+    PROCEDURE   shift, and go to state 11
+    FUNCTION    shift, and go to state 12
+    IDENTIFIER  shift, and go to state 29
+
+    procedure_block   go to state 55
+    end_block         go to state 19
+    C4                go to state 56
+    C7                go to state 20
+    procedure_header  go to state 21
+    function_header   go to state 22
+
+
+State 32
+
+   74 D0: UINT . COLON
+
+    COLON  shift, and go to state 57
+
+
+State 33
+
+   76 state_cycle: statement .
+
+    $default  reduce using rule 76 (state_cycle)
+
+
+State 34
+
+   54 statement: D0 . variable ASSIGN expression
+   55          | D0 . IDENTIFIER
+   56          | D0 . IDENTIFIER LPAR real_par RPAR
+   57          | D0 . GOTO UINT
+   58          | D0 . BEGIN state_cycle END
+   59          | D0 . IF expression THEN statement
+   60          | D0 . IF expression THEN statement2 ELSE statement
+   61          | D0 . WHILE expression DO statement
+   62          | D0 . REPEAT state_cycle UNTIL expression
+   63          | D0 . FOR IDENTIFIER ASSIGN expression FOR_DIRECTION expression DO statement
+   78 variable: . variable LSBRA ord_expr_cylc RSBRA
+   79         | . IDENTIFIER
+
+    BEGIN       shift, and go to state 58
+    GOTO        shift, and go to state 59
+    IF          shift, and go to state 60
+    WHILE       shift, and go to state 61
+    REPEAT      shift, and go to state 62
+    FOR         shift, and go to state 63
+    IDENTIFIER  shift, and go to state 64
+
+    variable  go to state 65
+
+
+State 35
+
+   13 end_block: BEGIN state_cycle . END
+   77 state_cycle: state_cycle . SEMICOLON statement
+
+    END        shift, and go to state 66
+    SEMICOLON  shift, and go to state 67
+
+
+State 36
+
+   36 procedure_header: PROCEDURE IDENTIFIER .  [SEMICOLON]
+   37                 | PROCEDURE IDENTIFIER . LPAR form_par RPAR
+
+    LPAR  shift, and go to state 68
+
+    $default  reduce using rule 36 (procedure_header)
+
+
+State 37
+
+   38 function_header: FUNCTION IDENTIFIER . COLON IDENTIFIER
+   39                | FUNCTION IDENTIFIER . LPAR form_par RPAR COLON IDENTIFIER
+
+    COLON  shift, and go to state 69
+    LPAR   shift, and go to state 70
+
+
+State 38
+
+    1 mlaskal: PROGRAM IDENTIFIER SEMICOLON block_P DOT .
+
+    $default  reduce using rule 1 (mlaskal)
+
+
+State 39
+
+    2 block_P: start_block const_block .
+
+    $default  reduce using rule 2 (block_P)
+
+
+State 40
+
+   12 procedure_block: C7 end_block .
+
+    $default  reduce using rule 12 (procedure_block)
+
+
+State 41
+
+   26 C7: C7 procedure_header . SEMICOLON block SEMICOLON
+
+    SEMICOLON  shift, and go to state 71
+
+
+State 42
+
+   27 C7: C7 function_header . SEMICOLON block SEMICOLON
+
+    SEMICOLON  shift, and go to state 72
+
+
+State 43
+
+    4 start_block: . LABEL C1 SEMICOLON
+   13 end_block: . BEGIN state_cycle END
+   24 C7: procedure_header SEMICOLON . block SEMICOLON
+   28 block: . start_block const_block2
+   29      | . const_block2
+   30 const_block2: . CONST C2 type_block2
+   31             | . type_block2
+   32 type_block2: . TYPE C3 var_block2
+   33            | . var_block2
+   34 var_block2: . VAR C5 end_block
+   35           | . end_block
+
+    LABEL  shift, and go to state 6
+    CONST  shift, and go to state 73
+    TYPE   shift, and go to state 74
+    VAR    shift, and go to state 75
+    BEGIN  shift, and go to state 10
+
+    start_block   go to state 76
+    end_block     go to state 77
+    block         go to state 78
+    const_block2  go to state 79
+    type_block2   go to state 80
+    var_block2    go to state 81
+
+
+State 44
+
+    4 start_block: . LABEL C1 SEMICOLON
+   13 end_block: . BEGIN state_cycle END
+   25 C7: function_header SEMICOLON . block SEMICOLON
+   28 block: . start_block const_block2
+   29      | . const_block2
+   30 const_block2: . CONST C2 type_block2
+   31             | . type_block2
+   32 type_block2: . TYPE C3 var_block2
+   33            | . var_block2
+   34 var_block2: . VAR C5 end_block
+   35           | . end_block
+
+    LABEL  shift, and go to state 6
+    CONST  shift, and go to state 73
+    TYPE   shift, and go to state 74
+    VAR    shift, and go to state 75
+    BEGIN  shift, and go to state 10
+
+    start_block   go to state 76
+    end_block     go to state 77
+    block         go to state 82
+    const_block2  go to state 79
+    type_block2   go to state 80
+    var_block2    go to state 81
+
+
+State 45
+
+    4 start_block: LABEL C1 SEMICOLON .
+
+    $default  reduce using rule 4 (start_block)
+
+
+State 46
+
+   15 C1: C1 COMMA . UINT
+
+    UINT  shift, and go to state 83
+
+
+State 47
+
+   16 C2: IDENTIFIER EQ . constant SEMICOLON
+  108 unsigned_const: . UINT
+  109               | . REAL
+  110               | . STRING
+  111               | . IDENTIFIER
+  112 constant: . unsigned_const
+  113         | . OPER_SIGNADD UINT
+  114         | . OPER_SIGNADD REAL
+
+    IDENTIFIER    shift, and go to state 84
+    UINT          shift, and go to state 85
+    REAL          shift, and go to state 86
+    STRING        shift, and go to state 87
+    OPER_SIGNADD  shift, and go to state 88
+
+    unsigned_const  go to state 89
+    constant        go to state 90
+
+
+State 48
+
+   17 C2: C2 IDENTIFIER . EQ constant SEMICOLON
+
+    EQ  shift, and go to state 91
+
+
+State 49
+
+    5 const_block: CONST C2 type_block .
+
+    $default  reduce using rule 5 (const_block)
+
+
+State 50
+
+   18 C3: IDENTIFIER EQ . type SEMICOLON
+   46 type: . ord_type
+   47     | . IDENTIFIER
+   48     | . struc_type
+   49 struc_type: . ARRAY LSBRA ord_type_cycl RSBRA OF type
+   50 ord_type: . ord_const DOTDOT ord_const
+  101 ord_const: . IDENTIFIER
+  102          | . OPER_SIGNADD IDENTIFIER
+  103          | . OPER_SIGNADD UINT
+  104          | . UINT
+
+    ARRAY         shift, and go to state 92
+    IDENTIFIER    shift, and go to state 93
+    UINT          shift, and go to state 94
+    OPER_SIGNADD  shift, and go to state 95
+
+    type        go to state 96
+    struc_type  go to state 97
+    ord_type    go to state 98
+    ord_const   go to state 99
+
+
+State 51
+
+   19 C3: C3 IDENTIFIER . EQ type SEMICOLON
+
+    EQ  shift, and go to state 100
+
+
+State 52
+
+    7 type_block: TYPE C3 var_block .
+
+    $default  reduce using rule 7 (type_block)
+
+
+State 53
+
+   21 C4: C4 COMMA . IDENTIFIER
+
+    IDENTIFIER  shift, and go to state 101
+
+
+State 54
+
+   22 C5: C4 COLON . type SEMICOLON
+   46 type: . ord_type
+   47     | . IDENTIFIER
+   48     | . struc_type
+   49 struc_type: . ARRAY LSBRA ord_type_cycl RSBRA OF type
+   50 ord_type: . ord_const DOTDOT ord_const
+  101 ord_const: . IDENTIFIER
+  102          | . OPER_SIGNADD IDENTIFIER
+  103          | . OPER_SIGNADD UINT
+  104          | . UINT
+
+    ARRAY         shift, and go to state 92
+    IDENTIFIER    shift, and go to state 93
+    UINT          shift, and go to state 94
+    OPER_SIGNADD  shift, and go to state 95
+
+    type        go to state 102
+    struc_type  go to state 97
+    ord_type    go to state 98
+    ord_const   go to state 99
+
+
+State 55
+
+    9 var_block: VAR C5 procedure_block .
+
+    $default  reduce using rule 9 (var_block)
+
+
+State 56
+
+   21 C4: C4 . COMMA IDENTIFIER
+   23 C5: C5 C4 . COLON type SEMICOLON
+
+    COMMA  shift, and go to state 53
+    COLON  shift, and go to state 103
+
+
+State 57
+
+   74 D0: UINT COLON .
+
+    $default  reduce using rule 74 (D0)
+
+
+State 58
+
+   53 statement: . %empty  [END, SEMICOLON]
+   54          | . D0 variable ASSIGN expression
+   55          | . D0 IDENTIFIER
+   56          | . D0 IDENTIFIER LPAR real_par RPAR
+   57          | . D0 GOTO UINT
+   58          | . D0 BEGIN state_cycle END
+   58          | D0 BEGIN . state_cycle END
+   59          | . D0 IF expression THEN statement
+   60          | . D0 IF expression THEN statement2 ELSE statement
+   61          | . D0 WHILE expression DO statement
+   62          | . D0 REPEAT state_cycle UNTIL expression
+   63          | . D0 FOR IDENTIFIER ASSIGN expression FOR_DIRECTION expression DO statement
+   74 D0: . UINT COLON
+   75   | . %empty  [BEGIN, GOTO, IF, WHILE, REPEAT, FOR, IDENTIFIER]
+   76 state_cycle: . statement
+   77            | . state_cycle SEMICOLON statement
+
+    UINT  shift, and go to state 32
+
+    END        reduce using rule 53 (statement)
+    SEMICOLON  reduce using rule 53 (statement)
+    $default   reduce using rule 75 (D0)
+
+    statement    go to state 33
+    D0           go to state 34
+    state_cycle  go to state 104
+
+
+State 59
+
+   57 statement: D0 GOTO . UINT
+
+    UINT  shift, and go to state 105
+
+
+State 60
+
+   59 statement: D0 IF . expression THEN statement
+   60          | D0 IF . expression THEN statement2 ELSE statement
+   78 variable: . variable LSBRA ord_expr_cylc RSBRA
+   79         | . IDENTIFIER
+   80 variable_withoutID: . variable LSBRA ord_expr_cylc RSBRA
+   85 expression: . simp_expression
+   86           | . simp_expression OPER_REL simp_expression
+   87           | . simp_expression EQ simp_expression
+   88 simp_expression: . OPER_SIGNADD term_oper
+   89                | . term_oper
+   90 term_oper: . term_oper OPER_SIGNADD term
+   91          | . term_oper OR term
+   92          | . term
+   93 term: . factor
+   94     | . term OPER_MUL factor
+   95 factor: . unsigned_const_withoutID
+   96       | . variable_withoutID
+   97       | . IDENTIFIER
+   98       | . IDENTIFIER LPAR real_par RPAR
+   99       | . LPAR expression RPAR
+  100       | . NOT factor
+  105 unsigned_const_withoutID: . REAL
+  106                         | . STRING
+  107                         | . UINT
+
+    NOT           shift, and go to state 106
+    IDENTIFIER    shift, and go to state 107
+    UINT          shift, and go to state 108
+    REAL          shift, and go to state 109
+    STRING        shift, and go to state 110
+    LPAR          shift, and go to state 111
+    OPER_SIGNADD  shift, and go to state 112
+
+    variable                  go to state 113
+    variable_withoutID        go to state 114
+    expression                go to state 115
+    simp_expression           go to state 116
+    term_oper                 go to state 117
+    term                      go to state 118
+    factor                    go to state 119
+    unsigned_const_withoutID  go to state 120
+
+
+State 61
+
+   61 statement: D0 WHILE . expression DO statement
+   78 variable: . variable LSBRA ord_expr_cylc RSBRA
+   79         | . IDENTIFIER
+   80 variable_withoutID: . variable LSBRA ord_expr_cylc RSBRA
+   85 expression: . simp_expression
+   86           | . simp_expression OPER_REL simp_expression
+   87           | . simp_expression EQ simp_expression
+   88 simp_expression: . OPER_SIGNADD term_oper
+   89                | . term_oper
+   90 term_oper: . term_oper OPER_SIGNADD term
+   91          | . term_oper OR term
+   92          | . term
+   93 term: . factor
+   94     | . term OPER_MUL factor
+   95 factor: . unsigned_const_withoutID
+   96       | . variable_withoutID
+   97       | . IDENTIFIER
+   98       | . IDENTIFIER LPAR real_par RPAR
+   99       | . LPAR expression RPAR
+  100       | . NOT factor
+  105 unsigned_const_withoutID: . REAL
+  106                         | . STRING
+  107                         | . UINT
+
+    NOT           shift, and go to state 106
+    IDENTIFIER    shift, and go to state 107
+    UINT          shift, and go to state 108
+    REAL          shift, and go to state 109
+    STRING        shift, and go to state 110
+    LPAR          shift, and go to state 111
+    OPER_SIGNADD  shift, and go to state 112
+
+    variable                  go to state 113
+    variable_withoutID        go to state 114
+    expression                go to state 121
+    simp_expression           go to state 116
+    term_oper                 go to state 117
+    term                      go to state 118
+    factor                    go to state 119
+    unsigned_const_withoutID  go to state 120
+
+
+State 62
+
+   53 statement: . %empty  [UNTIL, SEMICOLON]
+   54          | . D0 variable ASSIGN expression
+   55          | . D0 IDENTIFIER
+   56          | . D0 IDENTIFIER LPAR real_par RPAR
+   57          | . D0 GOTO UINT
+   58          | . D0 BEGIN state_cycle END
+   59          | . D0 IF expression THEN statement
+   60          | . D0 IF expression THEN statement2 ELSE statement
+   61          | . D0 WHILE expression DO statement
+   62          | . D0 REPEAT state_cycle UNTIL expression
+   62          | D0 REPEAT . state_cycle UNTIL expression
+   63          | . D0 FOR IDENTIFIER ASSIGN expression FOR_DIRECTION expression DO statement
+   74 D0: . UINT COLON
+   75   | . %empty  [BEGIN, GOTO, IF, WHILE, REPEAT, FOR, IDENTIFIER]
+   76 state_cycle: . statement
+   77            | . state_cycle SEMICOLON statement
+
+    UINT  shift, and go to state 32
+
+    UNTIL      reduce using rule 53 (statement)
+    SEMICOLON  reduce using rule 53 (statement)
+    $default   reduce using rule 75 (D0)
+
+    statement    go to state 33
+    D0           go to state 34
+    state_cycle  go to state 122
+
+
+State 63
+
+   63 statement: D0 FOR . IDENTIFIER ASSIGN expression FOR_DIRECTION expression DO statement
+
+    IDENTIFIER  shift, and go to state 123
+
+
+State 64
+
+   55 statement: D0 IDENTIFIER .  [END, UNTIL, SEMICOLON]
+   56          | D0 IDENTIFIER . LPAR real_par RPAR
+   79 variable: IDENTIFIER .  [LSBRA, ASSIGN]
+
+    LPAR  shift, and go to state 124
+
+    LSBRA     reduce using rule 79 (variable)
+    ASSIGN    reduce using rule 79 (variable)
+    $default  reduce using rule 55 (statement)
+
+
+State 65
+
+   54 statement: D0 variable . ASSIGN expression
+   78 variable: variable . LSBRA ord_expr_cylc RSBRA
+
+    LSBRA   shift, and go to state 125
+    ASSIGN  shift, and go to state 126
+
+
+State 66
+
+   13 end_block: BEGIN state_cycle END .
+
+    $default  reduce using rule 13 (end_block)
+
+
+State 67
+
+   53 statement: . %empty  [END, UNTIL, SEMICOLON]
+   54          | . D0 variable ASSIGN expression
+   55          | . D0 IDENTIFIER
+   56          | . D0 IDENTIFIER LPAR real_par RPAR
+   57          | . D0 GOTO UINT
+   58          | . D0 BEGIN state_cycle END
+   59          | . D0 IF expression THEN statement
+   60          | . D0 IF expression THEN statement2 ELSE statement
+   61          | . D0 WHILE expression DO statement
+   62          | . D0 REPEAT state_cycle UNTIL expression
+   63          | . D0 FOR IDENTIFIER ASSIGN expression FOR_DIRECTION expression DO statement
+   74 D0: . UINT COLON
+   75   | . %empty  [BEGIN, GOTO, IF, WHILE, REPEAT, FOR, IDENTIFIER]
+   77 state_cycle: state_cycle SEMICOLON . statement
+
+    UINT  shift, and go to state 32
+
+    END        reduce using rule 53 (statement)
+    UNTIL      reduce using rule 53 (statement)
+    SEMICOLON  reduce using rule 53 (statement)
+    $default   reduce using rule 75 (D0)
+
+    statement  go to state 127
+    D0         go to state 34
+
+
+State 68
+
+   37 procedure_header: PROCEDURE IDENTIFIER LPAR . form_par RPAR
+   40 form_par: . VAR id_cycl COLON IDENTIFIER
+   41         | . id_cycl COLON IDENTIFIER
+   42         | . form_par SEMICOLON VAR id_cycl COLON IDENTIFIER
+   43         | . form_par SEMICOLON id_cycl COLON IDENTIFIER
+   44 id_cycl: . IDENTIFIER
+   45        | . id_cycl COMMA IDENTIFIER
+
+    VAR         shift, and go to state 128
+    IDENTIFIER  shift, and go to state 129
+
+    form_par  go to state 130
+    id_cycl   go to state 131
+
+
+State 69
+
+   38 function_header: FUNCTION IDENTIFIER COLON . IDENTIFIER
+
+    IDENTIFIER  shift, and go to state 132
+
+
+State 70
+
+   39 function_header: FUNCTION IDENTIFIER LPAR . form_par RPAR COLON IDENTIFIER
+   40 form_par: . VAR id_cycl COLON IDENTIFIER
+   41         | . id_cycl COLON IDENTIFIER
+   42         | . form_par SEMICOLON VAR id_cycl COLON IDENTIFIER
+   43         | . form_par SEMICOLON id_cycl COLON IDENTIFIER
+   44 id_cycl: . IDENTIFIER
+   45        | . id_cycl COMMA IDENTIFIER
+
+    VAR         shift, and go to state 128
+    IDENTIFIER  shift, and go to state 129
+
+    form_par  go to state 133
+    id_cycl   go to state 131
+
+
+State 71
+
+    4 start_block: . LABEL C1 SEMICOLON
+   13 end_block: . BEGIN state_cycle END
+   26 C7: C7 procedure_header SEMICOLON . block SEMICOLON
+   28 block: . start_block const_block2
+   29      | . const_block2
+   30 const_block2: . CONST C2 type_block2
+   31             | . type_block2
+   32 type_block2: . TYPE C3 var_block2
+   33            | . var_block2
+   34 var_block2: . VAR C5 end_block
+   35           | . end_block
+
+    LABEL  shift, and go to state 6
+    CONST  shift, and go to state 73
+    TYPE   shift, and go to state 74
+    VAR    shift, and go to state 75
+    BEGIN  shift, and go to state 10
+
+    start_block   go to state 76
+    end_block     go to state 77
+    block         go to state 134
+    const_block2  go to state 79
+    type_block2   go to state 80
+    var_block2    go to state 81
+
+
+State 72
+
+    4 start_block: . LABEL C1 SEMICOLON
+   13 end_block: . BEGIN state_cycle END
+   27 C7: C7 function_header SEMICOLON . block SEMICOLON
+   28 block: . start_block const_block2
+   29      | . const_block2
+   30 const_block2: . CONST C2 type_block2
+   31             | . type_block2
+   32 type_block2: . TYPE C3 var_block2
+   33            | . var_block2
+   34 var_block2: . VAR C5 end_block
+   35           | . end_block
+
+    LABEL  shift, and go to state 6
+    CONST  shift, and go to state 73
+    TYPE   shift, and go to state 74
+    VAR    shift, and go to state 75
+    BEGIN  shift, and go to state 10
+
+    start_block   go to state 76
+    end_block     go to state 77
+    block         go to state 135
+    const_block2  go to state 79
+    type_block2   go to state 80
+    var_block2    go to state 81
+
+
+State 73
+
+   16 C2: . IDENTIFIER EQ constant SEMICOLON
+   17   | . C2 IDENTIFIER EQ constant SEMICOLON
+   30 const_block2: CONST . C2 type_block2
+
+    IDENTIFIER  shift, and go to state 25
+
+    C2  go to state 136
+
+
+State 74
+
+   18 C3: . IDENTIFIER EQ type SEMICOLON
+   19   | . C3 IDENTIFIER EQ type SEMICOLON
+   32 type_block2: TYPE . C3 var_block2
+
+    IDENTIFIER  shift, and go to state 27
+
+    C3  go to state 137
+
+
+State 75
+
+   20 C4: . IDENTIFIER
+   21   | . C4 COMMA IDENTIFIER
+   22 C5: . C4 COLON type SEMICOLON
+   23   | . C5 C4 COLON type SEMICOLON
+   34 var_block2: VAR . C5 end_block
+
+    IDENTIFIER  shift, and go to state 29
+
+    C4  go to state 30
+    C5  go to state 138
+
+
+State 76
+
+   13 end_block: . BEGIN state_cycle END
+   28 block: start_block . const_block2
+   30 const_block2: . CONST C2 type_block2
+   31             | . type_block2
+   32 type_block2: . TYPE C3 var_block2
+   33            | . var_block2
+   34 var_block2: . VAR C5 end_block
+   35           | . end_block
+
+    CONST  shift, and go to state 73
+    TYPE   shift, and go to state 74
+    VAR    shift, and go to state 75
+    BEGIN  shift, and go to state 10
+
+    end_block     go to state 77
+    const_block2  go to state 139
+    type_block2   go to state 80
+    var_block2    go to state 81
+
+
+State 77
+
+   35 var_block2: end_block .
+
+    $default  reduce using rule 35 (var_block2)
+
+
+State 78
+
+   24 C7: procedure_header SEMICOLON block . SEMICOLON
+
+    SEMICOLON  shift, and go to state 140
+
+
+State 79
+
+   29 block: const_block2 .
+
+    $default  reduce using rule 29 (block)
+
+
+State 80
+
+   31 const_block2: type_block2 .
+
+    $default  reduce using rule 31 (const_block2)
+
+
+State 81
+
+   33 type_block2: var_block2 .
+
+    $default  reduce using rule 33 (type_block2)
+
+
+State 82
+
+   25 C7: function_header SEMICOLON block . SEMICOLON
+
+    SEMICOLON  shift, and go to state 141
+
+
+State 83
+
+   15 C1: C1 COMMA UINT .
+
+    $default  reduce using rule 15 (C1)
+
+
+State 84
+
+  111 unsigned_const: IDENTIFIER .
+
+    $default  reduce using rule 111 (unsigned_const)
+
+
+State 85
+
+  108 unsigned_const: UINT .
+
+    $default  reduce using rule 108 (unsigned_const)
+
+
+State 86
+
+  109 unsigned_const: REAL .
+
+    $default  reduce using rule 109 (unsigned_const)
+
+
+State 87
+
+  110 unsigned_const: STRING .
+
+    $default  reduce using rule 110 (unsigned_const)
+
+
+State 88
+
+  113 constant: OPER_SIGNADD . UINT
+  114         | OPER_SIGNADD . REAL
+
+    UINT  shift, and go to state 142
+    REAL  shift, and go to state 143
+
+
+State 89
+
+  112 constant: unsigned_const .
+
+    $default  reduce using rule 112 (constant)
+
+
+State 90
+
+   16 C2: IDENTIFIER EQ constant . SEMICOLON
+
+    SEMICOLON  shift, and go to state 144
+
+
+State 91
+
+   17 C2: C2 IDENTIFIER EQ . constant SEMICOLON
+  108 unsigned_const: . UINT
+  109               | . REAL
+  110               | . STRING
+  111               | . IDENTIFIER
+  112 constant: . unsigned_const
+  113         | . OPER_SIGNADD UINT
+  114         | . OPER_SIGNADD REAL
+
+    IDENTIFIER    shift, and go to state 84
+    UINT          shift, and go to state 85
+    REAL          shift, and go to state 86
+    STRING        shift, and go to state 87
+    OPER_SIGNADD  shift, and go to state 88
+
+    unsigned_const  go to state 89
+    constant        go to state 145
+
+
+State 92
+
+   49 struc_type: ARRAY . LSBRA ord_type_cycl RSBRA OF type
+
+    LSBRA  shift, and go to state 146
+
+
+State 93
+
+   47 type: IDENTIFIER .  [SEMICOLON]
+  101 ord_const: IDENTIFIER .  [DOTDOT]
+
+    DOTDOT    reduce using rule 101 (ord_const)
+    $default  reduce using rule 47 (type)
+
+
+State 94
+
+  104 ord_const: UINT .
+
+    $default  reduce using rule 104 (ord_const)
+
+
+State 95
+
+  102 ord_const: OPER_SIGNADD . IDENTIFIER
+  103          | OPER_SIGNADD . UINT
+
+    IDENTIFIER  shift, and go to state 147
+    UINT        shift, and go to state 148
+
+
+State 96
+
+   18 C3: IDENTIFIER EQ type . SEMICOLON
+
+    SEMICOLON  shift, and go to state 149
+
+
+State 97
+
+   48 type: struc_type .
+
+    $default  reduce using rule 48 (type)
+
+
+State 98
+
+   46 type: ord_type .
+
+    $default  reduce using rule 46 (type)
+
+
+State 99
+
+   50 ord_type: ord_const . DOTDOT ord_const
+
+    DOTDOT  shift, and go to state 150
+
+
+State 100
+
+   19 C3: C3 IDENTIFIER EQ . type SEMICOLON
+   46 type: . ord_type
+   47     | . IDENTIFIER
+   48     | . struc_type
+   49 struc_type: . ARRAY LSBRA ord_type_cycl RSBRA OF type
+   50 ord_type: . ord_const DOTDOT ord_const
+  101 ord_const: . IDENTIFIER
+  102          | . OPER_SIGNADD IDENTIFIER
+  103          | . OPER_SIGNADD UINT
+  104          | . UINT
+
+    ARRAY         shift, and go to state 92
+    IDENTIFIER    shift, and go to state 93
+    UINT          shift, and go to state 94
+    OPER_SIGNADD  shift, and go to state 95
+
+    type        go to state 151
+    struc_type  go to state 97
+    ord_type    go to state 98
+    ord_const   go to state 99
+
+
+State 101
+
+   21 C4: C4 COMMA IDENTIFIER .
+
+    $default  reduce using rule 21 (C4)
+
+
+State 102
+
+   22 C5: C4 COLON type . SEMICOLON
+
+    SEMICOLON  shift, and go to state 152
+
+
+State 103
+
+   23 C5: C5 C4 COLON . type SEMICOLON
+   46 type: . ord_type
+   47     | . IDENTIFIER
+   48     | . struc_type
+   49 struc_type: . ARRAY LSBRA ord_type_cycl RSBRA OF type
+   50 ord_type: . ord_const DOTDOT ord_const
+  101 ord_const: . IDENTIFIER
+  102          | . OPER_SIGNADD IDENTIFIER
+  103          | . OPER_SIGNADD UINT
+  104          | . UINT
+
+    ARRAY         shift, and go to state 92
+    IDENTIFIER    shift, and go to state 93
+    UINT          shift, and go to state 94
+    OPER_SIGNADD  shift, and go to state 95
+
+    type        go to state 153
+    struc_type  go to state 97
+    ord_type    go to state 98
+    ord_const   go to state 99
+
+
+State 104
+
+   58 statement: D0 BEGIN state_cycle . END
+   77 state_cycle: state_cycle . SEMICOLON statement
+
+    END        shift, and go to state 154
+    SEMICOLON  shift, and go to state 67
+
+
+State 105
+
+   57 statement: D0 GOTO UINT .
+
+    $default  reduce using rule 57 (statement)
+
+
+State 106
+
+   78 variable: . variable LSBRA ord_expr_cylc RSBRA
+   79         | . IDENTIFIER
+   80 variable_withoutID: . variable LSBRA ord_expr_cylc RSBRA
+   95 factor: . unsigned_const_withoutID
+   96       | . variable_withoutID
+   97       | . IDENTIFIER
+   98       | . IDENTIFIER LPAR real_par RPAR
+   99       | . LPAR expression RPAR
+  100       | . NOT factor
+  100       | NOT . factor
+  105 unsigned_const_withoutID: . REAL
+  106                         | . STRING
+  107                         | . UINT
+
+    NOT         shift, and go to state 106
+    IDENTIFIER  shift, and go to state 107
+    UINT        shift, and go to state 108
+    REAL        shift, and go to state 109
+    STRING      shift, and go to state 110
+    LPAR        shift, and go to state 111
+
+    variable                  go to state 113
+    variable_withoutID        go to state 114
+    factor                    go to state 155
+    unsigned_const_withoutID  go to state 120
+
+
+State 107
+
+   79 variable: IDENTIFIER .  [LSBRA]
+   97 factor: IDENTIFIER .  [END, THEN, ELSE, DO, UNTIL, OR, SEMICOLON, COMMA, EQ, RPAR, RSBRA, OPER_REL, OPER_SIGNADD, OPER_MUL, FOR_DIRECTION]
+   98       | IDENTIFIER . LPAR real_par RPAR
+
+    LPAR  shift, and go to state 156
+
+    LSBRA     reduce using rule 79 (variable)
+    $default  reduce using rule 97 (factor)
+
+
+State 108
+
+  107 unsigned_const_withoutID: UINT .
+
+    $default  reduce using rule 107 (unsigned_const_withoutID)
+
+
+State 109
+
+  105 unsigned_const_withoutID: REAL .
+
+    $default  reduce using rule 105 (unsigned_const_withoutID)
+
+
+State 110
+
+  106 unsigned_const_withoutID: STRING .
+
+    $default  reduce using rule 106 (unsigned_const_withoutID)
+
+
+State 111
+
+   78 variable: . variable LSBRA ord_expr_cylc RSBRA
+   79         | . IDENTIFIER
+   80 variable_withoutID: . variable LSBRA ord_expr_cylc RSBRA
+   85 expression: . simp_expression
+   86           | . simp_expression OPER_REL simp_expression
+   87           | . simp_expression EQ simp_expression
+   88 simp_expression: . OPER_SIGNADD term_oper
+   89                | . term_oper
+   90 term_oper: . term_oper OPER_SIGNADD term
+   91          | . term_oper OR term
+   92          | . term
+   93 term: . factor
+   94     | . term OPER_MUL factor
+   95 factor: . unsigned_const_withoutID
+   96       | . variable_withoutID
+   97       | . IDENTIFIER
+   98       | . IDENTIFIER LPAR real_par RPAR
+   99       | . LPAR expression RPAR
+   99       | LPAR . expression RPAR
+  100       | . NOT factor
+  105 unsigned_const_withoutID: . REAL
+  106                         | . STRING
+  107                         | . UINT
+
+    NOT           shift, and go to state 106
+    IDENTIFIER    shift, and go to state 107
+    UINT          shift, and go to state 108
+    REAL          shift, and go to state 109
+    STRING        shift, and go to state 110
+    LPAR          shift, and go to state 111
+    OPER_SIGNADD  shift, and go to state 112
+
+    variable                  go to state 113
+    variable_withoutID        go to state 114
+    expression                go to state 157
+    simp_expression           go to state 116
+    term_oper                 go to state 117
+    term                      go to state 118
+    factor                    go to state 119
+    unsigned_const_withoutID  go to state 120
+
+
+State 112
+
+   78 variable: . variable LSBRA ord_expr_cylc RSBRA
+   79         | . IDENTIFIER
+   80 variable_withoutID: . variable LSBRA ord_expr_cylc RSBRA
+   88 simp_expression: OPER_SIGNADD . term_oper
+   90 term_oper: . term_oper OPER_SIGNADD term
+   91          | . term_oper OR term
+   92          | . term
+   93 term: . factor
+   94     | . term OPER_MUL factor
+   95 factor: . unsigned_const_withoutID
+   96       | . variable_withoutID
+   97       | . IDENTIFIER
+   98       | . IDENTIFIER LPAR real_par RPAR
+   99       | . LPAR expression RPAR
+  100       | . NOT factor
+  105 unsigned_const_withoutID: . REAL
+  106                         | . STRING
+  107                         | . UINT
+
+    NOT         shift, and go to state 106
+    IDENTIFIER  shift, and go to state 107
+    UINT        shift, and go to state 108
+    REAL        shift, and go to state 109
+    STRING      shift, and go to state 110
+    LPAR        shift, and go to state 111
+
+    variable                  go to state 113
+    variable_withoutID        go to state 114
+    term_oper                 go to state 158
+    term                      go to state 118
+    factor                    go to state 119
+    unsigned_const_withoutID  go to state 120
+
+
+State 113
+
+   78 variable: variable . LSBRA ord_expr_cylc RSBRA
+   80 variable_withoutID: variable . LSBRA ord_expr_cylc RSBRA
+
+    LSBRA  shift, and go to state 159
+
+
+State 114
+
+   96 factor: variable_withoutID .
+
+    $default  reduce using rule 96 (factor)
+
+
+State 115
+
+   59 statement: D0 IF expression . THEN statement
+   60          | D0 IF expression . THEN statement2 ELSE statement
+
+    THEN  shift, and go to state 160
+
+
+State 116
+
+   85 expression: simp_expression .  [END, THEN, ELSE, DO, UNTIL, SEMICOLON, COMMA, RPAR, RSBRA, FOR_DIRECTION]
+   86           | simp_expression . OPER_REL simp_expression
+   87           | simp_expression . EQ simp_expression
+
+    EQ        shift, and go to state 161
+    OPER_REL  shift, and go to state 162
+
+    $default  reduce using rule 85 (expression)
+
+
+State 117
+
+   89 simp_expression: term_oper .  [END, THEN, ELSE, DO, UNTIL, SEMICOLON, COMMA, EQ, RPAR, RSBRA, OPER_REL, FOR_DIRECTION]
+   90 term_oper: term_oper . OPER_SIGNADD term
+   91          | term_oper . OR term
+
+    OR            shift, and go to state 163
+    OPER_SIGNADD  shift, and go to state 164
+
+    $default  reduce using rule 89 (simp_expression)
+
+
+State 118
+
+   92 term_oper: term .  [END, THEN, ELSE, DO, UNTIL, OR, SEMICOLON, COMMA, EQ, RPAR, RSBRA, OPER_REL, OPER_SIGNADD, FOR_DIRECTION]
+   94 term: term . OPER_MUL factor
+
+    OPER_MUL  shift, and go to state 165
+
+    $default  reduce using rule 92 (term_oper)
+
+
+State 119
+
+   93 term: factor .
+
+    $default  reduce using rule 93 (term)
+
+
+State 120
+
+   95 factor: unsigned_const_withoutID .
+
+    $default  reduce using rule 95 (factor)
+
+
+State 121
+
+   61 statement: D0 WHILE expression . DO statement
+
+    DO  shift, and go to state 166
+
+
+State 122
+
+   62 statement: D0 REPEAT state_cycle . UNTIL expression
+   77 state_cycle: state_cycle . SEMICOLON statement
+
+    UNTIL      shift, and go to state 167
+    SEMICOLON  shift, and go to state 67
+
+
+State 123
+
+   63 statement: D0 FOR IDENTIFIER . ASSIGN expression FOR_DIRECTION expression DO statement
+
+    ASSIGN  shift, and go to state 168
+
+
+State 124
+
+   56 statement: D0 IDENTIFIER LPAR . real_par RPAR
+   78 variable: . variable LSBRA ord_expr_cylc RSBRA
+   79         | . IDENTIFIER
+   80 variable_withoutID: . variable LSBRA ord_expr_cylc RSBRA
+   83 real_par: . expression
+   84         | . real_par COMMA expression
+   85 expression: . simp_expression
+   86           | . simp_expression OPER_REL simp_expression
+   87           | . simp_expression EQ simp_expression
+   88 simp_expression: . OPER_SIGNADD term_oper
+   89                | . term_oper
+   90 term_oper: . term_oper OPER_SIGNADD term
+   91          | . term_oper OR term
+   92          | . term
+   93 term: . factor
+   94     | . term OPER_MUL factor
+   95 factor: . unsigned_const_withoutID
+   96       | . variable_withoutID
+   97       | . IDENTIFIER
+   98       | . IDENTIFIER LPAR real_par RPAR
+   99       | . LPAR expression RPAR
+  100       | . NOT factor
+  105 unsigned_const_withoutID: . REAL
+  106                         | . STRING
+  107                         | . UINT
+
+    NOT           shift, and go to state 106
+    IDENTIFIER    shift, and go to state 107
+    UINT          shift, and go to state 108
+    REAL          shift, and go to state 109
+    STRING        shift, and go to state 110
+    LPAR          shift, and go to state 111
+    OPER_SIGNADD  shift, and go to state 112
+
+    variable                  go to state 113
+    variable_withoutID        go to state 114
+    real_par                  go to state 169
+    expression                go to state 170
+    simp_expression           go to state 116
+    term_oper                 go to state 117
+    term                      go to state 118
+    factor                    go to state 119
+    unsigned_const_withoutID  go to state 120
+
+
+State 125
+
+   78 variable: . variable LSBRA ord_expr_cylc RSBRA
+   78         | variable LSBRA . ord_expr_cylc RSBRA
+   79         | . IDENTIFIER
+   80 variable_withoutID: . variable LSBRA ord_expr_cylc RSBRA
+   81 ord_expr_cylc: . expression
+   82              | . ord_expr_cylc COMMA expression
+   85 expression: . simp_expression
+   86           | . simp_expression OPER_REL simp_expression
+   87           | . simp_expression EQ simp_expression
+   88 simp_expression: . OPER_SIGNADD term_oper
+   89                | . term_oper
+   90 term_oper: . term_oper OPER_SIGNADD term
+   91          | . term_oper OR term
+   92          | . term
+   93 term: . factor
+   94     | . term OPER_MUL factor
+   95 factor: . unsigned_const_withoutID
+   96       | . variable_withoutID
+   97       | . IDENTIFIER
+   98       | . IDENTIFIER LPAR real_par RPAR
+   99       | . LPAR expression RPAR
+  100       | . NOT factor
+  105 unsigned_const_withoutID: . REAL
+  106                         | . STRING
+  107                         | . UINT
+
+    NOT           shift, and go to state 106
+    IDENTIFIER    shift, and go to state 107
+    UINT          shift, and go to state 108
+    REAL          shift, and go to state 109
+    STRING        shift, and go to state 110
+    LPAR          shift, and go to state 111
+    OPER_SIGNADD  shift, and go to state 112
+
+    variable                  go to state 113
+    variable_withoutID        go to state 114
+    ord_expr_cylc             go to state 171
+    expression                go to state 172
+    simp_expression           go to state 116
+    term_oper                 go to state 117
+    term                      go to state 118
+    factor                    go to state 119
+    unsigned_const_withoutID  go to state 120
+
+
+State 126
+
+   54 statement: D0 variable ASSIGN . expression
+   78 variable: . variable LSBRA ord_expr_cylc RSBRA
+   79         | . IDENTIFIER
+   80 variable_withoutID: . variable LSBRA ord_expr_cylc RSBRA
+   85 expression: . simp_expression
+   86           | . simp_expression OPER_REL simp_expression
+   87           | . simp_expression EQ simp_expression
+   88 simp_expression: . OPER_SIGNADD term_oper
+   89                | . term_oper
+   90 term_oper: . term_oper OPER_SIGNADD term
+   91          | . term_oper OR term
+   92          | . term
+   93 term: . factor
+   94     | . term OPER_MUL factor
+   95 factor: . unsigned_const_withoutID
+   96       | . variable_withoutID
+   97       | . IDENTIFIER
+   98       | . IDENTIFIER LPAR real_par RPAR
+   99       | . LPAR expression RPAR
+  100       | . NOT factor
+  105 unsigned_const_withoutID: . REAL
+  106                         | . STRING
+  107                         | . UINT
+
+    NOT           shift, and go to state 106
+    IDENTIFIER    shift, and go to state 107
+    UINT          shift, and go to state 108
+    REAL          shift, and go to state 109
+    STRING        shift, and go to state 110
+    LPAR          shift, and go to state 111
+    OPER_SIGNADD  shift, and go to state 112
+
+    variable                  go to state 113
+    variable_withoutID        go to state 114
+    expression                go to state 173
+    simp_expression           go to state 116
+    term_oper                 go to state 117
+    term                      go to state 118
+    factor                    go to state 119
+    unsigned_const_withoutID  go to state 120
+
+
+State 127
+
+   77 state_cycle: state_cycle SEMICOLON statement .
+
+    $default  reduce using rule 77 (state_cycle)
+
+
+State 128
+
+   40 form_par: VAR . id_cycl COLON IDENTIFIER
+   44 id_cycl: . IDENTIFIER
+   45        | . id_cycl COMMA IDENTIFIER
+
+    IDENTIFIER  shift, and go to state 129
+
+    id_cycl  go to state 174
+
+
+State 129
+
+   44 id_cycl: IDENTIFIER .
+
+    $default  reduce using rule 44 (id_cycl)
+
+
+State 130
+
+   37 procedure_header: PROCEDURE IDENTIFIER LPAR form_par . RPAR
+   42 form_par: form_par . SEMICOLON VAR id_cycl COLON IDENTIFIER
+   43         | form_par . SEMICOLON id_cycl COLON IDENTIFIER
+
+    SEMICOLON  shift, and go to state 175
+    RPAR       shift, and go to state 176
+
+
+State 131
+
+   41 form_par: id_cycl . COLON IDENTIFIER
+   45 id_cycl: id_cycl . COMMA IDENTIFIER
+
+    COMMA  shift, and go to state 177
+    COLON  shift, and go to state 178
+
+
+State 132
+
+   38 function_header: FUNCTION IDENTIFIER COLON IDENTIFIER .
+
+    $default  reduce using rule 38 (function_header)
+
+
+State 133
+
+   39 function_header: FUNCTION IDENTIFIER LPAR form_par . RPAR COLON IDENTIFIER
+   42 form_par: form_par . SEMICOLON VAR id_cycl COLON IDENTIFIER
+   43         | form_par . SEMICOLON id_cycl COLON IDENTIFIER
+
+    SEMICOLON  shift, and go to state 175
+    RPAR       shift, and go to state 179
+
+
+State 134
+
+   26 C7: C7 procedure_header SEMICOLON block . SEMICOLON
+
+    SEMICOLON  shift, and go to state 180
+
+
+State 135
+
+   27 C7: C7 function_header SEMICOLON block . SEMICOLON
+
+    SEMICOLON  shift, and go to state 181
+
+
+State 136
+
+   13 end_block: . BEGIN state_cycle END
+   17 C2: C2 . IDENTIFIER EQ constant SEMICOLON
+   30 const_block2: CONST C2 . type_block2
+   32 type_block2: . TYPE C3 var_block2
+   33            | . var_block2
+   34 var_block2: . VAR C5 end_block
+   35           | . end_block
+
+    TYPE        shift, and go to state 74
+    VAR         shift, and go to state 75
+    BEGIN       shift, and go to state 10
+    IDENTIFIER  shift, and go to state 48
+
+    end_block    go to state 77
+    type_block2  go to state 182
+    var_block2   go to state 81
+
+
+State 137
+
+   13 end_block: . BEGIN state_cycle END
+   19 C3: C3 . IDENTIFIER EQ type SEMICOLON
+   32 type_block2: TYPE C3 . var_block2
+   34 var_block2: . VAR C5 end_block
+   35           | . end_block
+
+    VAR         shift, and go to state 75
+    BEGIN       shift, and go to state 10
+    IDENTIFIER  shift, and go to state 51
+
+    end_block   go to state 77
+    var_block2  go to state 183
+
+
+State 138
+
+   13 end_block: . BEGIN state_cycle END
+   20 C4: . IDENTIFIER
+   21   | . C4 COMMA IDENTIFIER
+   23 C5: C5 . C4 COLON type SEMICOLON
+   34 var_block2: VAR C5 . end_block
+
+    BEGIN       shift, and go to state 10
+    IDENTIFIER  shift, and go to state 29
+
+    end_block  go to state 184
+    C4         go to state 56
+
+
+State 139
+
+   28 block: start_block const_block2 .
+
+    $default  reduce using rule 28 (block)
+
+
+State 140
+
+   24 C7: procedure_header SEMICOLON block SEMICOLON .
+
+    $default  reduce using rule 24 (C7)
+
+
+State 141
+
+   25 C7: function_header SEMICOLON block SEMICOLON .
+
+    $default  reduce using rule 25 (C7)
+
+
+State 142
+
+  113 constant: OPER_SIGNADD UINT .
+
+    $default  reduce using rule 113 (constant)
+
+
+State 143
+
+  114 constant: OPER_SIGNADD REAL .
+
+    $default  reduce using rule 114 (constant)
+
+
+State 144
+
+   16 C2: IDENTIFIER EQ constant SEMICOLON .
+
+    $default  reduce using rule 16 (C2)
+
+
+State 145
+
+   17 C2: C2 IDENTIFIER EQ constant . SEMICOLON
+
+    SEMICOLON  shift, and go to state 185
+
+
+State 146
+
+   49 struc_type: ARRAY LSBRA . ord_type_cycl RSBRA OF type
+   50 ord_type: . ord_const DOTDOT ord_const
+   51 ord_type_cycl: . ord_type
+   52              | . ord_type_cycl COMMA ord_type
+  101 ord_const: . IDENTIFIER
+  102          | . OPER_SIGNADD IDENTIFIER
+  103          | . OPER_SIGNADD UINT
+  104          | . UINT
+
+    IDENTIFIER    shift, and go to state 186
+    UINT          shift, and go to state 94
+    OPER_SIGNADD  shift, and go to state 95
+
+    ord_type       go to state 187
+    ord_type_cycl  go to state 188
+    ord_const      go to state 99
+
+
+State 147
+
+  102 ord_const: OPER_SIGNADD IDENTIFIER .
+
+    $default  reduce using rule 102 (ord_const)
+
+
+State 148
+
+  103 ord_const: OPER_SIGNADD UINT .
+
+    $default  reduce using rule 103 (ord_const)
+
+
+State 149
+
+   18 C3: IDENTIFIER EQ type SEMICOLON .
+
+    $default  reduce using rule 18 (C3)
+
+
+State 150
+
+   50 ord_type: ord_const DOTDOT . ord_const
+  101 ord_const: . IDENTIFIER
+  102          | . OPER_SIGNADD IDENTIFIER
+  103          | . OPER_SIGNADD UINT
+  104          | . UINT
+
+    IDENTIFIER    shift, and go to state 186
+    UINT          shift, and go to state 94
+    OPER_SIGNADD  shift, and go to state 95
+
+    ord_const  go to state 189
+
+
+State 151
+
+   19 C3: C3 IDENTIFIER EQ type . SEMICOLON
+
+    SEMICOLON  shift, and go to state 190
+
+
+State 152
+
+   22 C5: C4 COLON type SEMICOLON .
+
+    $default  reduce using rule 22 (C5)
+
+
+State 153
+
+   23 C5: C5 C4 COLON type . SEMICOLON
+
+    SEMICOLON  shift, and go to state 191
+
+
+State 154
+
+   58 statement: D0 BEGIN state_cycle END .
+
+    $default  reduce using rule 58 (statement)
+
+
+State 155
+
+  100 factor: NOT factor .
+
+    $default  reduce using rule 100 (factor)
+
+
+State 156
+
+   78 variable: . variable LSBRA ord_expr_cylc RSBRA
+   79         | . IDENTIFIER
+   80 variable_withoutID: . variable LSBRA ord_expr_cylc RSBRA
+   83 real_par: . expression
+   84         | . real_par COMMA expression
+   85 expression: . simp_expression
+   86           | . simp_expression OPER_REL simp_expression
+   87           | . simp_expression EQ simp_expression
+   88 simp_expression: . OPER_SIGNADD term_oper
+   89                | . term_oper
+   90 term_oper: . term_oper OPER_SIGNADD term
+   91          | . term_oper OR term
+   92          | . term
+   93 term: . factor
+   94     | . term OPER_MUL factor
+   95 factor: . unsigned_const_withoutID
+   96       | . variable_withoutID
+   97       | . IDENTIFIER
+   98       | . IDENTIFIER LPAR real_par RPAR
+   98       | IDENTIFIER LPAR . real_par RPAR
+   99       | . LPAR expression RPAR
+  100       | . NOT factor
+  105 unsigned_const_withoutID: . REAL
+  106                         | . STRING
+  107                         | . UINT
+
+    NOT           shift, and go to state 106
+    IDENTIFIER    shift, and go to state 107
+    UINT          shift, and go to state 108
+    REAL          shift, and go to state 109
+    STRING        shift, and go to state 110
+    LPAR          shift, and go to state 111
+    OPER_SIGNADD  shift, and go to state 112
+
+    variable                  go to state 113
+    variable_withoutID        go to state 114
+    real_par                  go to state 192
+    expression                go to state 170
+    simp_expression           go to state 116
+    term_oper                 go to state 117
+    term                      go to state 118
+    factor                    go to state 119
+    unsigned_const_withoutID  go to state 120
+
+
+State 157
+
+   99 factor: LPAR expression . RPAR
+
+    RPAR  shift, and go to state 193
+
+
+State 158
+
+   88 simp_expression: OPER_SIGNADD term_oper .  [END, THEN, ELSE, DO, UNTIL, SEMICOLON, COMMA, EQ, RPAR, RSBRA, OPER_REL, FOR_DIRECTION]
+   90 term_oper: term_oper . OPER_SIGNADD term
+   91          | term_oper . OR term
+
+    OR            shift, and go to state 163
+    OPER_SIGNADD  shift, and go to state 164
+
+    $default  reduce using rule 88 (simp_expression)
+
+
+State 159
+
+   78 variable: . variable LSBRA ord_expr_cylc RSBRA
+   78         | variable LSBRA . ord_expr_cylc RSBRA
+   79         | . IDENTIFIER
+   80 variable_withoutID: . variable LSBRA ord_expr_cylc RSBRA
+   80                   | variable LSBRA . ord_expr_cylc RSBRA
+   81 ord_expr_cylc: . expression
+   82              | . ord_expr_cylc COMMA expression
+   85 expression: . simp_expression
+   86           | . simp_expression OPER_REL simp_expression
+   87           | . simp_expression EQ simp_expression
+   88 simp_expression: . OPER_SIGNADD term_oper
+   89                | . term_oper
+   90 term_oper: . term_oper OPER_SIGNADD term
+   91          | . term_oper OR term
+   92          | . term
+   93 term: . factor
+   94     | . term OPER_MUL factor
+   95 factor: . unsigned_const_withoutID
+   96       | . variable_withoutID
+   97       | . IDENTIFIER
+   98       | . IDENTIFIER LPAR real_par RPAR
+   99       | . LPAR expression RPAR
+  100       | . NOT factor
+  105 unsigned_const_withoutID: . REAL
+  106                         | . STRING
+  107                         | . UINT
+
+    NOT           shift, and go to state 106
+    IDENTIFIER    shift, and go to state 107
+    UINT          shift, and go to state 108
+    REAL          shift, and go to state 109
+    STRING        shift, and go to state 110
+    LPAR          shift, and go to state 111
+    OPER_SIGNADD  shift, and go to state 112
+
+    variable                  go to state 113
+    variable_withoutID        go to state 114
+    ord_expr_cylc             go to state 194
+    expression                go to state 172
+    simp_expression           go to state 116
+    term_oper                 go to state 117
+    term                      go to state 118
+    factor                    go to state 119
+    unsigned_const_withoutID  go to state 120
+
+
+State 160
+
+   53 statement: . %empty  [END, UNTIL, SEMICOLON]
+   54          | . D0 variable ASSIGN expression
+   55          | . D0 IDENTIFIER
+   56          | . D0 IDENTIFIER LPAR real_par RPAR
+   57          | . D0 GOTO UINT
+   58          | . D0 BEGIN state_cycle END
+   59          | . D0 IF expression THEN statement
+   59          | D0 IF expression THEN . statement
+   60          | . D0 IF expression THEN statement2 ELSE statement
+   60          | D0 IF expression THEN . statement2 ELSE statement
+   61          | . D0 WHILE expression DO statement
+   62          | . D0 REPEAT state_cycle UNTIL expression
+   63          | . D0 FOR IDENTIFIER ASSIGN expression FOR_DIRECTION expression DO statement
+   64 statement2: . %empty  [ELSE]
+   65           | . D0 variable ASSIGN expression
+   66           | . D0 IDENTIFIER
+   67           | . D0 IDENTIFIER LPAR real_par RPAR
+   68           | . D0 GOTO UINT
+   69           | . D0 BEGIN state_cycle END
+   70           | . D0 IF expression THEN statement2 ELSE statement2
+   71           | . D0 WHILE expression DO statement2
+   72           | . D0 REPEAT state_cycle UNTIL expression
+   73           | . D0 FOR IDENTIFIER ASSIGN expression FOR_DIRECTION expression DO statement2
+   74 D0: . UINT COLON
+   75   | . %empty  [BEGIN, GOTO, IF, WHILE, REPEAT, FOR, IDENTIFIER]
+
+    UINT  shift, and go to state 32
+
+    END        reduce using rule 53 (statement)
+    ELSE       reduce using rule 64 (statement2)
+    UNTIL      reduce using rule 53 (statement)
+    SEMICOLON  reduce using rule 53 (statement)
+    $default   reduce using rule 75 (D0)
+
+    statement   go to state 195
+    statement2  go to state 196
+    D0          go to state 197
+
+
+State 161
+
+   78 variable: . variable LSBRA ord_expr_cylc RSBRA
+   79         | . IDENTIFIER
+   80 variable_withoutID: . variable LSBRA ord_expr_cylc RSBRA
+   87 expression: simp_expression EQ . simp_expression
+   88 simp_expression: . OPER_SIGNADD term_oper
+   89                | . term_oper
+   90 term_oper: . term_oper OPER_SIGNADD term
+   91          | . term_oper OR term
+   92          | . term
+   93 term: . factor
+   94     | . term OPER_MUL factor
+   95 factor: . unsigned_const_withoutID
+   96       | . variable_withoutID
+   97       | . IDENTIFIER
+   98       | . IDENTIFIER LPAR real_par RPAR
+   99       | . LPAR expression RPAR
+  100       | . NOT factor
+  105 unsigned_const_withoutID: . REAL
+  106                         | . STRING
+  107                         | . UINT
+
+    NOT           shift, and go to state 106
+    IDENTIFIER    shift, and go to state 107
+    UINT          shift, and go to state 108
+    REAL          shift, and go to state 109
+    STRING        shift, and go to state 110
+    LPAR          shift, and go to state 111
+    OPER_SIGNADD  shift, and go to state 112
+
+    variable                  go to state 113
+    variable_withoutID        go to state 114
+    simp_expression           go to state 198
+    term_oper                 go to state 117
+    term                      go to state 118
+    factor                    go to state 119
+    unsigned_const_withoutID  go to state 120
+
+
+State 162
+
+   78 variable: . variable LSBRA ord_expr_cylc RSBRA
+   79         | . IDENTIFIER
+   80 variable_withoutID: . variable LSBRA ord_expr_cylc RSBRA
+   86 expression: simp_expression OPER_REL . simp_expression
+   88 simp_expression: . OPER_SIGNADD term_oper
+   89                | . term_oper
+   90 term_oper: . term_oper OPER_SIGNADD term
+   91          | . term_oper OR term
+   92          | . term
+   93 term: . factor
+   94     | . term OPER_MUL factor
+   95 factor: . unsigned_const_withoutID
+   96       | . variable_withoutID
+   97       | . IDENTIFIER
+   98       | . IDENTIFIER LPAR real_par RPAR
+   99       | . LPAR expression RPAR
+  100       | . NOT factor
+  105 unsigned_const_withoutID: . REAL
+  106                         | . STRING
+  107                         | . UINT
+
+    NOT           shift, and go to state 106
+    IDENTIFIER    shift, and go to state 107
+    UINT          shift, and go to state 108
+    REAL          shift, and go to state 109
+    STRING        shift, and go to state 110
+    LPAR          shift, and go to state 111
+    OPER_SIGNADD  shift, and go to state 112
+
+    variable                  go to state 113
+    variable_withoutID        go to state 114
+    simp_expression           go to state 199
+    term_oper                 go to state 117
+    term                      go to state 118
+    factor                    go to state 119
+    unsigned_const_withoutID  go to state 120
+
+
+State 163
+
+   78 variable: . variable LSBRA ord_expr_cylc RSBRA
+   79         | . IDENTIFIER
+   80 variable_withoutID: . variable LSBRA ord_expr_cylc RSBRA
+   91 term_oper: term_oper OR . term
+   93 term: . factor
+   94     | . term OPER_MUL factor
+   95 factor: . unsigned_const_withoutID
+   96       | . variable_withoutID
+   97       | . IDENTIFIER
+   98       | . IDENTIFIER LPAR real_par RPAR
+   99       | . LPAR expression RPAR
+  100       | . NOT factor
+  105 unsigned_const_withoutID: . REAL
+  106                         | . STRING
+  107                         | . UINT
+
+    NOT         shift, and go to state 106
+    IDENTIFIER  shift, and go to state 107
+    UINT        shift, and go to state 108
+    REAL        shift, and go to state 109
+    STRING      shift, and go to state 110
+    LPAR        shift, and go to state 111
+
+    variable                  go to state 113
+    variable_withoutID        go to state 114
+    term                      go to state 200
+    factor                    go to state 119
+    unsigned_const_withoutID  go to state 120
+
+
+State 164
+
+   78 variable: . variable LSBRA ord_expr_cylc RSBRA
+   79         | . IDENTIFIER
+   80 variable_withoutID: . variable LSBRA ord_expr_cylc RSBRA
+   90 term_oper: term_oper OPER_SIGNADD . term
+   93 term: . factor
+   94     | . term OPER_MUL factor
+   95 factor: . unsigned_const_withoutID
+   96       | . variable_withoutID
+   97       | . IDENTIFIER
+   98       | . IDENTIFIER LPAR real_par RPAR
+   99       | . LPAR expression RPAR
+  100       | . NOT factor
+  105 unsigned_const_withoutID: . REAL
+  106                         | . STRING
+  107                         | . UINT
+
+    NOT         shift, and go to state 106
+    IDENTIFIER  shift, and go to state 107
+    UINT        shift, and go to state 108
+    REAL        shift, and go to state 109
+    STRING      shift, and go to state 110
+    LPAR        shift, and go to state 111
+
+    variable                  go to state 113
+    variable_withoutID        go to state 114
+    term                      go to state 201
+    factor                    go to state 119
+    unsigned_const_withoutID  go to state 120
+
+
+State 165
+
+   78 variable: . variable LSBRA ord_expr_cylc RSBRA
+   79         | . IDENTIFIER
+   80 variable_withoutID: . variable LSBRA ord_expr_cylc RSBRA
+   94 term: term OPER_MUL . factor
+   95 factor: . unsigned_const_withoutID
+   96       | . variable_withoutID
+   97       | . IDENTIFIER
+   98       | . IDENTIFIER LPAR real_par RPAR
+   99       | . LPAR expression RPAR
+  100       | . NOT factor
+  105 unsigned_const_withoutID: . REAL
+  106                         | . STRING
+  107                         | . UINT
+
+    NOT         shift, and go to state 106
+    IDENTIFIER  shift, and go to state 107
+    UINT        shift, and go to state 108
+    REAL        shift, and go to state 109
+    STRING      shift, and go to state 110
+    LPAR        shift, and go to state 111
+
+    variable                  go to state 113
+    variable_withoutID        go to state 114
+    factor                    go to state 202
+    unsigned_const_withoutID  go to state 120
+
+
+State 166
+
+   53 statement: . %empty  [END, UNTIL, SEMICOLON]
+   54          | . D0 variable ASSIGN expression
+   55          | . D0 IDENTIFIER
+   56          | . D0 IDENTIFIER LPAR real_par RPAR
+   57          | . D0 GOTO UINT
+   58          | . D0 BEGIN state_cycle END
+   59          | . D0 IF expression THEN statement
+   60          | . D0 IF expression THEN statement2 ELSE statement
+   61          | . D0 WHILE expression DO statement
+   61          | D0 WHILE expression DO . statement
+   62          | . D0 REPEAT state_cycle UNTIL expression
+   63          | . D0 FOR IDENTIFIER ASSIGN expression FOR_DIRECTION expression DO statement
+   74 D0: . UINT COLON
+   75   | . %empty  [BEGIN, GOTO, IF, WHILE, REPEAT, FOR, IDENTIFIER]
+
+    UINT  shift, and go to state 32
+
+    END        reduce using rule 53 (statement)
+    UNTIL      reduce using rule 53 (statement)
+    SEMICOLON  reduce using rule 53 (statement)
+    $default   reduce using rule 75 (D0)
+
+    statement  go to state 203
+    D0         go to state 34
+
+
+State 167
+
+   62 statement: D0 REPEAT state_cycle UNTIL . expression
+   78 variable: . variable LSBRA ord_expr_cylc RSBRA
+   79         | . IDENTIFIER
+   80 variable_withoutID: . variable LSBRA ord_expr_cylc RSBRA
+   85 expression: . simp_expression
+   86           | . simp_expression OPER_REL simp_expression
+   87           | . simp_expression EQ simp_expression
+   88 simp_expression: . OPER_SIGNADD term_oper
+   89                | . term_oper
+   90 term_oper: . term_oper OPER_SIGNADD term
+   91          | . term_oper OR term
+   92          | . term
+   93 term: . factor
+   94     | . term OPER_MUL factor
+   95 factor: . unsigned_const_withoutID
+   96       | . variable_withoutID
+   97       | . IDENTIFIER
+   98       | . IDENTIFIER LPAR real_par RPAR
+   99       | . LPAR expression RPAR
+  100       | . NOT factor
+  105 unsigned_const_withoutID: . REAL
+  106                         | . STRING
+  107                         | . UINT
+
+    NOT           shift, and go to state 106
+    IDENTIFIER    shift, and go to state 107
+    UINT          shift, and go to state 108
+    REAL          shift, and go to state 109
+    STRING        shift, and go to state 110
+    LPAR          shift, and go to state 111
+    OPER_SIGNADD  shift, and go to state 112
+
+    variable                  go to state 113
+    variable_withoutID        go to state 114
+    expression                go to state 204
+    simp_expression           go to state 116
+    term_oper                 go to state 117
+    term                      go to state 118
+    factor                    go to state 119
+    unsigned_const_withoutID  go to state 120
+
+
+State 168
+
+   63 statement: D0 FOR IDENTIFIER ASSIGN . expression FOR_DIRECTION expression DO statement
+   78 variable: . variable LSBRA ord_expr_cylc RSBRA
+   79         | . IDENTIFIER
+   80 variable_withoutID: . variable LSBRA ord_expr_cylc RSBRA
+   85 expression: . simp_expression
+   86           | . simp_expression OPER_REL simp_expression
+   87           | . simp_expression EQ simp_expression
+   88 simp_expression: . OPER_SIGNADD term_oper
+   89                | . term_oper
+   90 term_oper: . term_oper OPER_SIGNADD term
+   91          | . term_oper OR term
+   92          | . term
+   93 term: . factor
+   94     | . term OPER_MUL factor
+   95 factor: . unsigned_const_withoutID
+   96       | . variable_withoutID
+   97       | . IDENTIFIER
+   98       | . IDENTIFIER LPAR real_par RPAR
+   99       | . LPAR expression RPAR
+  100       | . NOT factor
+  105 unsigned_const_withoutID: . REAL
+  106                         | . STRING
+  107                         | . UINT
+
+    NOT           shift, and go to state 106
+    IDENTIFIER    shift, and go to state 107
+    UINT          shift, and go to state 108
+    REAL          shift, and go to state 109
+    STRING        shift, and go to state 110
+    LPAR          shift, and go to state 111
+    OPER_SIGNADD  shift, and go to state 112
+
+    variable                  go to state 113
+    variable_withoutID        go to state 114
+    expression                go to state 205
+    simp_expression           go to state 116
+    term_oper                 go to state 117
+    term                      go to state 118
+    factor                    go to state 119
+    unsigned_const_withoutID  go to state 120
+
+
+State 169
+
+   56 statement: D0 IDENTIFIER LPAR real_par . RPAR
+   84 real_par: real_par . COMMA expression
+
+    COMMA  shift, and go to state 206
+    RPAR   shift, and go to state 207
+
+
+State 170
+
+   83 real_par: expression .
+
+    $default  reduce using rule 83 (real_par)
+
+
+State 171
+
+   78 variable: variable LSBRA ord_expr_cylc . RSBRA
+   82 ord_expr_cylc: ord_expr_cylc . COMMA expression
+
+    COMMA  shift, and go to state 208
+    RSBRA  shift, and go to state 209
+
+
+State 172
+
+   81 ord_expr_cylc: expression .
+
+    $default  reduce using rule 81 (ord_expr_cylc)
+
+
+State 173
+
+   54 statement: D0 variable ASSIGN expression .
+
+    $default  reduce using rule 54 (statement)
+
+
+State 174
+
+   40 form_par: VAR id_cycl . COLON IDENTIFIER
+   45 id_cycl: id_cycl . COMMA IDENTIFIER
+
+    COMMA  shift, and go to state 177
+    COLON  shift, and go to state 210
+
+
+State 175
+
+   42 form_par: form_par SEMICOLON . VAR id_cycl COLON IDENTIFIER
+   43         | form_par SEMICOLON . id_cycl COLON IDENTIFIER
+   44 id_cycl: . IDENTIFIER
+   45        | . id_cycl COMMA IDENTIFIER
+
+    VAR         shift, and go to state 211
+    IDENTIFIER  shift, and go to state 129
+
+    id_cycl  go to state 212
+
+
+State 176
+
+   37 procedure_header: PROCEDURE IDENTIFIER LPAR form_par RPAR .
+
+    $default  reduce using rule 37 (procedure_header)
+
+
+State 177
+
+   45 id_cycl: id_cycl COMMA . IDENTIFIER
+
+    IDENTIFIER  shift, and go to state 213
+
+
+State 178
+
+   41 form_par: id_cycl COLON . IDENTIFIER
+
+    IDENTIFIER  shift, and go to state 214
+
+
+State 179
+
+   39 function_header: FUNCTION IDENTIFIER LPAR form_par RPAR . COLON IDENTIFIER
+
+    COLON  shift, and go to state 215
+
+
+State 180
+
+   26 C7: C7 procedure_header SEMICOLON block SEMICOLON .
+
+    $default  reduce using rule 26 (C7)
+
+
+State 181
+
+   27 C7: C7 function_header SEMICOLON block SEMICOLON .
+
+    $default  reduce using rule 27 (C7)
+
+
+State 182
+
+   30 const_block2: CONST C2 type_block2 .
+
+    $default  reduce using rule 30 (const_block2)
+
+
+State 183
+
+   32 type_block2: TYPE C3 var_block2 .
+
+    $default  reduce using rule 32 (type_block2)
+
+
+State 184
+
+   34 var_block2: VAR C5 end_block .
+
+    $default  reduce using rule 34 (var_block2)
+
+
+State 185
+
+   17 C2: C2 IDENTIFIER EQ constant SEMICOLON .
+
+    $default  reduce using rule 17 (C2)
+
+
+State 186
+
+  101 ord_const: IDENTIFIER .
+
+    $default  reduce using rule 101 (ord_const)
+
+
+State 187
+
+   51 ord_type_cycl: ord_type .
+
+    $default  reduce using rule 51 (ord_type_cycl)
+
+
+State 188
+
+   49 struc_type: ARRAY LSBRA ord_type_cycl . RSBRA OF type
+   52 ord_type_cycl: ord_type_cycl . COMMA ord_type
+
+    COMMA  shift, and go to state 216
+    RSBRA  shift, and go to state 217
+
+
+State 189
+
+   50 ord_type: ord_const DOTDOT ord_const .
+
+    $default  reduce using rule 50 (ord_type)
+
+
+State 190
+
+   19 C3: C3 IDENTIFIER EQ type SEMICOLON .
+
+    $default  reduce using rule 19 (C3)
+
+
+State 191
+
+   23 C5: C5 C4 COLON type SEMICOLON .
+
+    $default  reduce using rule 23 (C5)
+
+
+State 192
+
+   84 real_par: real_par . COMMA expression
+   98 factor: IDENTIFIER LPAR real_par . RPAR
+
+    COMMA  shift, and go to state 206
+    RPAR   shift, and go to state 218
+
+
+State 193
+
+   99 factor: LPAR expression RPAR .
+
+    $default  reduce using rule 99 (factor)
+
+
+State 194
+
+   78 variable: variable LSBRA ord_expr_cylc . RSBRA
+   80 variable_withoutID: variable LSBRA ord_expr_cylc . RSBRA
+   82 ord_expr_cylc: ord_expr_cylc . COMMA expression
+
+    COMMA  shift, and go to state 208
+    RSBRA  shift, and go to state 219
+
+
+State 195
+
+   59 statement: D0 IF expression THEN statement .
+
+    $default  reduce using rule 59 (statement)
+
+
+State 196
+
+   60 statement: D0 IF expression THEN statement2 . ELSE statement
+
+    ELSE  shift, and go to state 220
+
+
+State 197
+
+   54 statement: D0 . variable ASSIGN expression
+   55          | D0 . IDENTIFIER
+   56          | D0 . IDENTIFIER LPAR real_par RPAR
+   57          | D0 . GOTO UINT
+   58          | D0 . BEGIN state_cycle END
+   59          | D0 . IF expression THEN statement
+   60          | D0 . IF expression THEN statement2 ELSE statement
+   61          | D0 . WHILE expression DO statement
+   62          | D0 . REPEAT state_cycle UNTIL expression
+   63          | D0 . FOR IDENTIFIER ASSIGN expression FOR_DIRECTION expression DO statement
+   65 statement2: D0 . variable ASSIGN expression
+   66           | D0 . IDENTIFIER
+   67           | D0 . IDENTIFIER LPAR real_par RPAR
+   68           | D0 . GOTO UINT
+   69           | D0 . BEGIN state_cycle END
+   70           | D0 . IF expression THEN statement2 ELSE statement2
+   71           | D0 . WHILE expression DO statement2
+   72           | D0 . REPEAT state_cycle UNTIL expression
+   73           | D0 . FOR IDENTIFIER ASSIGN expression FOR_DIRECTION expression DO statement2
+   78 variable: . variable LSBRA ord_expr_cylc RSBRA
+   79         | . IDENTIFIER
+
+    BEGIN       shift, and go to state 221
+    GOTO        shift, and go to state 222
+    IF          shift, and go to state 223
+    WHILE       shift, and go to state 224
+    REPEAT      shift, and go to state 225
+    FOR         shift, and go to state 226
+    IDENTIFIER  shift, and go to state 227
+
+    variable  go to state 228
+
+
+State 198
+
+   87 expression: simp_expression EQ simp_expression .
+
+    $default  reduce using rule 87 (expression)
+
+
+State 199
+
+   86 expression: simp_expression OPER_REL simp_expression .
+
+    $default  reduce using rule 86 (expression)
+
+
+State 200
+
+   91 term_oper: term_oper OR term .  [END, THEN, ELSE, DO, UNTIL, OR, SEMICOLON, COMMA, EQ, RPAR, RSBRA, OPER_REL, OPER_SIGNADD, FOR_DIRECTION]
+   94 term: term . OPER_MUL factor
+
+    OPER_MUL  shift, and go to state 165
+
+    $default  reduce using rule 91 (term_oper)
+
+
+State 201
+
+   90 term_oper: term_oper OPER_SIGNADD term .  [END, THEN, ELSE, DO, UNTIL, OR, SEMICOLON, COMMA, EQ, RPAR, RSBRA, OPER_REL, OPER_SIGNADD, FOR_DIRECTION]
+   94 term: term . OPER_MUL factor
+
+    OPER_MUL  shift, and go to state 165
+
+    $default  reduce using rule 90 (term_oper)
+
+
+State 202
+
+   94 term: term OPER_MUL factor .
+
+    $default  reduce using rule 94 (term)
+
+
+State 203
+
+   61 statement: D0 WHILE expression DO statement .
+
+    $default  reduce using rule 61 (statement)
+
+
+State 204
+
+   62 statement: D0 REPEAT state_cycle UNTIL expression .
+
+    $default  reduce using rule 62 (statement)
+
+
+State 205
+
+   63 statement: D0 FOR IDENTIFIER ASSIGN expression . FOR_DIRECTION expression DO statement
+
+    FOR_DIRECTION  shift, and go to state 229
+
+
+State 206
+
+   78 variable: . variable LSBRA ord_expr_cylc RSBRA
+   79         | . IDENTIFIER
+   80 variable_withoutID: . variable LSBRA ord_expr_cylc RSBRA
+   84 real_par: real_par COMMA . expression
+   85 expression: . simp_expression
+   86           | . simp_expression OPER_REL simp_expression
+   87           | . simp_expression EQ simp_expression
+   88 simp_expression: . OPER_SIGNADD term_oper
+   89                | . term_oper
+   90 term_oper: . term_oper OPER_SIGNADD term
+   91          | . term_oper OR term
+   92          | . term
+   93 term: . factor
+   94     | . term OPER_MUL factor
+   95 factor: . unsigned_const_withoutID
+   96       | . variable_withoutID
+   97       | . IDENTIFIER
+   98       | . IDENTIFIER LPAR real_par RPAR
+   99       | . LPAR expression RPAR
+  100       | . NOT factor
+  105 unsigned_const_withoutID: . REAL
+  106                         | . STRING
+  107                         | . UINT
+
+    NOT           shift, and go to state 106
+    IDENTIFIER    shift, and go to state 107
+    UINT          shift, and go to state 108
+    REAL          shift, and go to state 109
+    STRING        shift, and go to state 110
+    LPAR          shift, and go to state 111
+    OPER_SIGNADD  shift, and go to state 112
+
+    variable                  go to state 113
+    variable_withoutID        go to state 114
+    expression                go to state 230
+    simp_expression           go to state 116
+    term_oper                 go to state 117
+    term                      go to state 118
+    factor                    go to state 119
+    unsigned_const_withoutID  go to state 120
+
+
+State 207
+
+   56 statement: D0 IDENTIFIER LPAR real_par RPAR .
+
+    $default  reduce using rule 56 (statement)
+
+
+State 208
+
+   78 variable: . variable LSBRA ord_expr_cylc RSBRA
+   79         | . IDENTIFIER
+   80 variable_withoutID: . variable LSBRA ord_expr_cylc RSBRA
+   82 ord_expr_cylc: ord_expr_cylc COMMA . expression
+   85 expression: . simp_expression
+   86           | . simp_expression OPER_REL simp_expression
+   87           | . simp_expression EQ simp_expression
+   88 simp_expression: . OPER_SIGNADD term_oper
+   89                | . term_oper
+   90 term_oper: . term_oper OPER_SIGNADD term
+   91          | . term_oper OR term
+   92          | . term
+   93 term: . factor
+   94     | . term OPER_MUL factor
+   95 factor: . unsigned_const_withoutID
+   96       | . variable_withoutID
+   97       | . IDENTIFIER
+   98       | . IDENTIFIER LPAR real_par RPAR
+   99       | . LPAR expression RPAR
+  100       | . NOT factor
+  105 unsigned_const_withoutID: . REAL
+  106                         | . STRING
+  107                         | . UINT
+
+    NOT           shift, and go to state 106
+    IDENTIFIER    shift, and go to state 107
+    UINT          shift, and go to state 108
+    REAL          shift, and go to state 109
+    STRING        shift, and go to state 110
+    LPAR          shift, and go to state 111
+    OPER_SIGNADD  shift, and go to state 112
+
+    variable                  go to state 113
+    variable_withoutID        go to state 114
+    expression                go to state 231
+    simp_expression           go to state 116
+    term_oper                 go to state 117
+    term                      go to state 118
+    factor                    go to state 119
+    unsigned_const_withoutID  go to state 120
+
+
+State 209
+
+   78 variable: variable LSBRA ord_expr_cylc RSBRA .
+
+    $default  reduce using rule 78 (variable)
+
+
+State 210
+
+   40 form_par: VAR id_cycl COLON . IDENTIFIER
+
+    IDENTIFIER  shift, and go to state 232
+
+
+State 211
+
+   42 form_par: form_par SEMICOLON VAR . id_cycl COLON IDENTIFIER
+   44 id_cycl: . IDENTIFIER
+   45        | . id_cycl COMMA IDENTIFIER
+
+    IDENTIFIER  shift, and go to state 129
+
+    id_cycl  go to state 233
+
+
+State 212
+
+   43 form_par: form_par SEMICOLON id_cycl . COLON IDENTIFIER
+   45 id_cycl: id_cycl . COMMA IDENTIFIER
+
+    COMMA  shift, and go to state 177
+    COLON  shift, and go to state 234
+
+
+State 213
+
+   45 id_cycl: id_cycl COMMA IDENTIFIER .
+
+    $default  reduce using rule 45 (id_cycl)
+
+
+State 214
+
+   41 form_par: id_cycl COLON IDENTIFIER .
+
+    $default  reduce using rule 41 (form_par)
+
+
+State 215
+
+   39 function_header: FUNCTION IDENTIFIER LPAR form_par RPAR COLON . IDENTIFIER
+
+    IDENTIFIER  shift, and go to state 235
+
+
+State 216
+
+   50 ord_type: . ord_const DOTDOT ord_const
+   52 ord_type_cycl: ord_type_cycl COMMA . ord_type
+  101 ord_const: . IDENTIFIER
+  102          | . OPER_SIGNADD IDENTIFIER
+  103          | . OPER_SIGNADD UINT
+  104          | . UINT
+
+    IDENTIFIER    shift, and go to state 186
+    UINT          shift, and go to state 94
+    OPER_SIGNADD  shift, and go to state 95
+
+    ord_type   go to state 236
+    ord_const  go to state 99
+
+
+State 217
+
+   49 struc_type: ARRAY LSBRA ord_type_cycl RSBRA . OF type
+
+    OF  shift, and go to state 237
+
+
+State 218
+
+   98 factor: IDENTIFIER LPAR real_par RPAR .
+
+    $default  reduce using rule 98 (factor)
+
+
+State 219
+
+   78 variable: variable LSBRA ord_expr_cylc RSBRA .  [LSBRA]
+   80 variable_withoutID: variable LSBRA ord_expr_cylc RSBRA .  [END, THEN, ELSE, DO, UNTIL, OR, SEMICOLON, COMMA, EQ, RPAR, RSBRA, OPER_REL, OPER_SIGNADD, OPER_MUL, FOR_DIRECTION]
+
+    LSBRA     reduce using rule 78 (variable)
+    $default  reduce using rule 80 (variable_withoutID)
+
+
+State 220
+
+   53 statement: . %empty  [END, UNTIL, SEMICOLON]
+   54          | . D0 variable ASSIGN expression
+   55          | . D0 IDENTIFIER
+   56          | . D0 IDENTIFIER LPAR real_par RPAR
+   57          | . D0 GOTO UINT
+   58          | . D0 BEGIN state_cycle END
+   59          | . D0 IF expression THEN statement
+   60          | . D0 IF expression THEN statement2 ELSE statement
+   60          | D0 IF expression THEN statement2 ELSE . statement
+   61          | . D0 WHILE expression DO statement
+   62          | . D0 REPEAT state_cycle UNTIL expression
+   63          | . D0 FOR IDENTIFIER ASSIGN expression FOR_DIRECTION expression DO statement
+   74 D0: . UINT COLON
+   75   | . %empty  [BEGIN, GOTO, IF, WHILE, REPEAT, FOR, IDENTIFIER]
+
+    UINT  shift, and go to state 32
+
+    END        reduce using rule 53 (statement)
+    UNTIL      reduce using rule 53 (statement)
+    SEMICOLON  reduce using rule 53 (statement)
+    $default   reduce using rule 75 (D0)
+
+    statement  go to state 238
+    D0         go to state 34
+
+
+State 221
+
+   53 statement: . %empty  [END, SEMICOLON]
+   54          | . D0 variable ASSIGN expression
+   55          | . D0 IDENTIFIER
+   56          | . D0 IDENTIFIER LPAR real_par RPAR
+   57          | . D0 GOTO UINT
+   58          | . D0 BEGIN state_cycle END
+   58          | D0 BEGIN . state_cycle END
+   59          | . D0 IF expression THEN statement
+   60          | . D0 IF expression THEN statement2 ELSE statement
+   61          | . D0 WHILE expression DO statement
+   62          | . D0 REPEAT state_cycle UNTIL expression
+   63          | . D0 FOR IDENTIFIER ASSIGN expression FOR_DIRECTION expression DO statement
+   69 statement2: D0 BEGIN . state_cycle END
+   74 D0: . UINT COLON
+   75   | . %empty  [BEGIN, GOTO, IF, WHILE, REPEAT, FOR, IDENTIFIER]
+   76 state_cycle: . statement
+   77            | . state_cycle SEMICOLON statement
+
+    UINT  shift, and go to state 32
+
+    END        reduce using rule 53 (statement)
+    SEMICOLON  reduce using rule 53 (statement)
+    $default   reduce using rule 75 (D0)
+
+    statement    go to state 33
+    D0           go to state 34
+    state_cycle  go to state 239
+
+
+State 222
+
+   57 statement: D0 GOTO . UINT
+   68 statement2: D0 GOTO . UINT
+
+    UINT  shift, and go to state 240
+
+
+State 223
+
+   59 statement: D0 IF . expression THEN statement
+   60          | D0 IF . expression THEN statement2 ELSE statement
+   70 statement2: D0 IF . expression THEN statement2 ELSE statement2
+   78 variable: . variable LSBRA ord_expr_cylc RSBRA
+   79         | . IDENTIFIER
+   80 variable_withoutID: . variable LSBRA ord_expr_cylc RSBRA
+   85 expression: . simp_expression
+   86           | . simp_expression OPER_REL simp_expression
+   87           | . simp_expression EQ simp_expression
+   88 simp_expression: . OPER_SIGNADD term_oper
+   89                | . term_oper
+   90 term_oper: . term_oper OPER_SIGNADD term
+   91          | . term_oper OR term
+   92          | . term
+   93 term: . factor
+   94     | . term OPER_MUL factor
+   95 factor: . unsigned_const_withoutID
+   96       | . variable_withoutID
+   97       | . IDENTIFIER
+   98       | . IDENTIFIER LPAR real_par RPAR
+   99       | . LPAR expression RPAR
+  100       | . NOT factor
+  105 unsigned_const_withoutID: . REAL
+  106                         | . STRING
+  107                         | . UINT
+
+    NOT           shift, and go to state 106
+    IDENTIFIER    shift, and go to state 107
+    UINT          shift, and go to state 108
+    REAL          shift, and go to state 109
+    STRING        shift, and go to state 110
+    LPAR          shift, and go to state 111
+    OPER_SIGNADD  shift, and go to state 112
+
+    variable                  go to state 113
+    variable_withoutID        go to state 114
+    expression                go to state 241
+    simp_expression           go to state 116
+    term_oper                 go to state 117
+    term                      go to state 118
+    factor                    go to state 119
+    unsigned_const_withoutID  go to state 120
+
+
+State 224
+
+   61 statement: D0 WHILE . expression DO statement
+   71 statement2: D0 WHILE . expression DO statement2
+   78 variable: . variable LSBRA ord_expr_cylc RSBRA
+   79         | . IDENTIFIER
+   80 variable_withoutID: . variable LSBRA ord_expr_cylc RSBRA
+   85 expression: . simp_expression
+   86           | . simp_expression OPER_REL simp_expression
+   87           | . simp_expression EQ simp_expression
+   88 simp_expression: . OPER_SIGNADD term_oper
+   89                | . term_oper
+   90 term_oper: . term_oper OPER_SIGNADD term
+   91          | . term_oper OR term
+   92          | . term
+   93 term: . factor
+   94     | . term OPER_MUL factor
+   95 factor: . unsigned_const_withoutID
+   96       | . variable_withoutID
+   97       | . IDENTIFIER
+   98       | . IDENTIFIER LPAR real_par RPAR
+   99       | . LPAR expression RPAR
+  100       | . NOT factor
+  105 unsigned_const_withoutID: . REAL
+  106                         | . STRING
+  107                         | . UINT
+
+    NOT           shift, and go to state 106
+    IDENTIFIER    shift, and go to state 107
+    UINT          shift, and go to state 108
+    REAL          shift, and go to state 109
+    STRING        shift, and go to state 110
+    LPAR          shift, and go to state 111
+    OPER_SIGNADD  shift, and go to state 112
+
+    variable                  go to state 113
+    variable_withoutID        go to state 114
+    expression                go to state 242
+    simp_expression           go to state 116
+    term_oper                 go to state 117
+    term                      go to state 118
+    factor                    go to state 119
+    unsigned_const_withoutID  go to state 120
+
+
+State 225
+
+   53 statement: . %empty  [UNTIL, SEMICOLON]
+   54          | . D0 variable ASSIGN expression
+   55          | . D0 IDENTIFIER
+   56          | . D0 IDENTIFIER LPAR real_par RPAR
+   57          | . D0 GOTO UINT
+   58          | . D0 BEGIN state_cycle END
+   59          | . D0 IF expression THEN statement
+   60          | . D0 IF expression THEN statement2 ELSE statement
+   61          | . D0 WHILE expression DO statement
+   62          | . D0 REPEAT state_cycle UNTIL expression
+   62          | D0 REPEAT . state_cycle UNTIL expression
+   63          | . D0 FOR IDENTIFIER ASSIGN expression FOR_DIRECTION expression DO statement
+   72 statement2: D0 REPEAT . state_cycle UNTIL expression
+   74 D0: . UINT COLON
+   75   | . %empty  [BEGIN, GOTO, IF, WHILE, REPEAT, FOR, IDENTIFIER]
+   76 state_cycle: . statement
+   77            | . state_cycle SEMICOLON statement
+
+    UINT  shift, and go to state 32
+
+    UNTIL      reduce using rule 53 (statement)
+    SEMICOLON  reduce using rule 53 (statement)
+    $default   reduce using rule 75 (D0)
+
+    statement    go to state 33
+    D0           go to state 34
+    state_cycle  go to state 243
+
+
+State 226
+
+   63 statement: D0 FOR . IDENTIFIER ASSIGN expression FOR_DIRECTION expression DO statement
+   73 statement2: D0 FOR . IDENTIFIER ASSIGN expression FOR_DIRECTION expression DO statement2
+
+    IDENTIFIER  shift, and go to state 244
+
+
+State 227
+
+   55 statement: D0 IDENTIFIER .  [END, UNTIL, SEMICOLON]
+   56          | D0 IDENTIFIER . LPAR real_par RPAR
+   66 statement2: D0 IDENTIFIER .  [ELSE]
+   67           | D0 IDENTIFIER . LPAR real_par RPAR
+   79 variable: IDENTIFIER .  [LSBRA, ASSIGN]
+
+    LPAR  shift, and go to state 245
+
+    ELSE      reduce using rule 66 (statement2)
+    LSBRA     reduce using rule 79 (variable)
+    ASSIGN    reduce using rule 79 (variable)
+    $default  reduce using rule 55 (statement)
+
+
+State 228
+
+   54 statement: D0 variable . ASSIGN expression
+   65 statement2: D0 variable . ASSIGN expression
+   78 variable: variable . LSBRA ord_expr_cylc RSBRA
+
+    LSBRA   shift, and go to state 125
+    ASSIGN  shift, and go to state 246
+
+
+State 229
+
+   63 statement: D0 FOR IDENTIFIER ASSIGN expression FOR_DIRECTION . expression DO statement
+   78 variable: . variable LSBRA ord_expr_cylc RSBRA
+   79         | . IDENTIFIER
+   80 variable_withoutID: . variable LSBRA ord_expr_cylc RSBRA
+   85 expression: . simp_expression
+   86           | . simp_expression OPER_REL simp_expression
+   87           | . simp_expression EQ simp_expression
+   88 simp_expression: . OPER_SIGNADD term_oper
+   89                | . term_oper
+   90 term_oper: . term_oper OPER_SIGNADD term
+   91          | . term_oper OR term
+   92          | . term
+   93 term: . factor
+   94     | . term OPER_MUL factor
+   95 factor: . unsigned_const_withoutID
+   96       | . variable_withoutID
+   97       | . IDENTIFIER
+   98       | . IDENTIFIER LPAR real_par RPAR
+   99       | . LPAR expression RPAR
+  100       | . NOT factor
+  105 unsigned_const_withoutID: . REAL
+  106                         | . STRING
+  107                         | . UINT
+
+    NOT           shift, and go to state 106
+    IDENTIFIER    shift, and go to state 107
+    UINT          shift, and go to state 108
+    REAL          shift, and go to state 109
+    STRING        shift, and go to state 110
+    LPAR          shift, and go to state 111
+    OPER_SIGNADD  shift, and go to state 112
+
+    variable                  go to state 113
+    variable_withoutID        go to state 114
+    expression                go to state 247
+    simp_expression           go to state 116
+    term_oper                 go to state 117
+    term                      go to state 118
+    factor                    go to state 119
+    unsigned_const_withoutID  go to state 120
+
+
+State 230
+
+   84 real_par: real_par COMMA expression .
+
+    $default  reduce using rule 84 (real_par)
+
+
+State 231
+
+   82 ord_expr_cylc: ord_expr_cylc COMMA expression .
+
+    $default  reduce using rule 82 (ord_expr_cylc)
+
+
+State 232
+
+   40 form_par: VAR id_cycl COLON IDENTIFIER .
+
+    $default  reduce using rule 40 (form_par)
+
+
+State 233
+
+   42 form_par: form_par SEMICOLON VAR id_cycl . COLON IDENTIFIER
+   45 id_cycl: id_cycl . COMMA IDENTIFIER
+
+    COMMA  shift, and go to state 177
+    COLON  shift, and go to state 248
+
+
+State 234
+
+   43 form_par: form_par SEMICOLON id_cycl COLON . IDENTIFIER
+
+    IDENTIFIER  shift, and go to state 249
+
+
+State 235
+
+   39 function_header: FUNCTION IDENTIFIER LPAR form_par RPAR COLON IDENTIFIER .
+
+    $default  reduce using rule 39 (function_header)
+
+
+State 236
+
+   52 ord_type_cycl: ord_type_cycl COMMA ord_type .
+
+    $default  reduce using rule 52 (ord_type_cycl)
+
+
+State 237
+
+   46 type: . ord_type
+   47     | . IDENTIFIER
+   48     | . struc_type
+   49 struc_type: . ARRAY LSBRA ord_type_cycl RSBRA OF type
+   49           | ARRAY LSBRA ord_type_cycl RSBRA OF . type
+   50 ord_type: . ord_const DOTDOT ord_const
+  101 ord_const: . IDENTIFIER
+  102          | . OPER_SIGNADD IDENTIFIER
+  103          | . OPER_SIGNADD UINT
+  104          | . UINT
+
+    ARRAY         shift, and go to state 92
+    IDENTIFIER    shift, and go to state 93
+    UINT          shift, and go to state 94
+    OPER_SIGNADD  shift, and go to state 95
+
+    type        go to state 250
+    struc_type  go to state 97
+    ord_type    go to state 98
+    ord_const   go to state 99
+
+
+State 238
+
+   60 statement: D0 IF expression THEN statement2 ELSE statement .
+
+    $default  reduce using rule 60 (statement)
+
+
+State 239
+
+   58 statement: D0 BEGIN state_cycle . END
+   69 statement2: D0 BEGIN state_cycle . END
+   77 state_cycle: state_cycle . SEMICOLON statement
+
+    END        shift, and go to state 251
+    SEMICOLON  shift, and go to state 67
+
+
+State 240
+
+   57 statement: D0 GOTO UINT .  [END, UNTIL, SEMICOLON]
+   68 statement2: D0 GOTO UINT .  [ELSE]
+
+    ELSE      reduce using rule 68 (statement2)
+    $default  reduce using rule 57 (statement)
+
+
+State 241
+
+   59 statement: D0 IF expression . THEN statement
+   60          | D0 IF expression . THEN statement2 ELSE statement
+   70 statement2: D0 IF expression . THEN statement2 ELSE statement2
+
+    THEN  shift, and go to state 252
+
+
+State 242
+
+   61 statement: D0 WHILE expression . DO statement
+   71 statement2: D0 WHILE expression . DO statement2
+
+    DO  shift, and go to state 253
+
+
+State 243
+
+   62 statement: D0 REPEAT state_cycle . UNTIL expression
+   72 statement2: D0 REPEAT state_cycle . UNTIL expression
+   77 state_cycle: state_cycle . SEMICOLON statement
+
+    UNTIL      shift, and go to state 254
+    SEMICOLON  shift, and go to state 67
+
+
+State 244
+
+   63 statement: D0 FOR IDENTIFIER . ASSIGN expression FOR_DIRECTION expression DO statement
+   73 statement2: D0 FOR IDENTIFIER . ASSIGN expression FOR_DIRECTION expression DO statement2
+
+    ASSIGN  shift, and go to state 255
+
+
+State 245
+
+   56 statement: D0 IDENTIFIER LPAR . real_par RPAR
+   67 statement2: D0 IDENTIFIER LPAR . real_par RPAR
+   78 variable: . variable LSBRA ord_expr_cylc RSBRA
+   79         | . IDENTIFIER
+   80 variable_withoutID: . variable LSBRA ord_expr_cylc RSBRA
+   83 real_par: . expression
+   84         | . real_par COMMA expression
+   85 expression: . simp_expression
+   86           | . simp_expression OPER_REL simp_expression
+   87           | . simp_expression EQ simp_expression
+   88 simp_expression: . OPER_SIGNADD term_oper
+   89                | . term_oper
+   90 term_oper: . term_oper OPER_SIGNADD term
+   91          | . term_oper OR term
+   92          | . term
+   93 term: . factor
+   94     | . term OPER_MUL factor
+   95 factor: . unsigned_const_withoutID
+   96       | . variable_withoutID
+   97       | . IDENTIFIER
+   98       | . IDENTIFIER LPAR real_par RPAR
+   99       | . LPAR expression RPAR
+  100       | . NOT factor
+  105 unsigned_const_withoutID: . REAL
+  106                         | . STRING
+  107                         | . UINT
+
+    NOT           shift, and go to state 106
+    IDENTIFIER    shift, and go to state 107
+    UINT          shift, and go to state 108
+    REAL          shift, and go to state 109
+    STRING        shift, and go to state 110
+    LPAR          shift, and go to state 111
+    OPER_SIGNADD  shift, and go to state 112
+
+    variable                  go to state 113
+    variable_withoutID        go to state 114
+    real_par                  go to state 256
+    expression                go to state 170
+    simp_expression           go to state 116
+    term_oper                 go to state 117
+    term                      go to state 118
+    factor                    go to state 119
+    unsigned_const_withoutID  go to state 120
+
+
+State 246
+
+   54 statement: D0 variable ASSIGN . expression
+   65 statement2: D0 variable ASSIGN . expression
+   78 variable: . variable LSBRA ord_expr_cylc RSBRA
+   79         | . IDENTIFIER
+   80 variable_withoutID: . variable LSBRA ord_expr_cylc RSBRA
+   85 expression: . simp_expression
+   86           | . simp_expression OPER_REL simp_expression
+   87           | . simp_expression EQ simp_expression
+   88 simp_expression: . OPER_SIGNADD term_oper
+   89                | . term_oper
+   90 term_oper: . term_oper OPER_SIGNADD term
+   91          | . term_oper OR term
+   92          | . term
+   93 term: . factor
+   94     | . term OPER_MUL factor
+   95 factor: . unsigned_const_withoutID
+   96       | . variable_withoutID
+   97       | . IDENTIFIER
+   98       | . IDENTIFIER LPAR real_par RPAR
+   99       | . LPAR expression RPAR
+  100       | . NOT factor
+  105 unsigned_const_withoutID: . REAL
+  106                         | . STRING
+  107                         | . UINT
+
+    NOT           shift, and go to state 106
+    IDENTIFIER    shift, and go to state 107
+    UINT          shift, and go to state 108
+    REAL          shift, and go to state 109
+    STRING        shift, and go to state 110
+    LPAR          shift, and go to state 111
+    OPER_SIGNADD  shift, and go to state 112
+
+    variable                  go to state 113
+    variable_withoutID        go to state 114
+    expression                go to state 257
+    simp_expression           go to state 116
+    term_oper                 go to state 117
+    term                      go to state 118
+    factor                    go to state 119
+    unsigned_const_withoutID  go to state 120
+
+
+State 247
+
+   63 statement: D0 FOR IDENTIFIER ASSIGN expression FOR_DIRECTION expression . DO statement
+
+    DO  shift, and go to state 258
+
+
+State 248
+
+   42 form_par: form_par SEMICOLON VAR id_cycl COLON . IDENTIFIER
+
+    IDENTIFIER  shift, and go to state 259
+
+
+State 249
+
+   43 form_par: form_par SEMICOLON id_cycl COLON IDENTIFIER .
+
+    $default  reduce using rule 43 (form_par)
+
+
+State 250
+
+   49 struc_type: ARRAY LSBRA ord_type_cycl RSBRA OF type .
+
+    $default  reduce using rule 49 (struc_type)
+
+
+State 251
+
+   58 statement: D0 BEGIN state_cycle END .  [END, UNTIL, SEMICOLON]
+   69 statement2: D0 BEGIN state_cycle END .  [ELSE]
+
+    ELSE      reduce using rule 69 (statement2)
+    $default  reduce using rule 58 (statement)
+
+
+State 252
+
+   53 statement: . %empty  [END, UNTIL, SEMICOLON]
+   54          | . D0 variable ASSIGN expression
+   55          | . D0 IDENTIFIER
+   56          | . D0 IDENTIFIER LPAR real_par RPAR
+   57          | . D0 GOTO UINT
+   58          | . D0 BEGIN state_cycle END
+   59          | . D0 IF expression THEN statement
+   59          | D0 IF expression THEN . statement
+   60          | . D0 IF expression THEN statement2 ELSE statement
+   60          | D0 IF expression THEN . statement2 ELSE statement
+   61          | . D0 WHILE expression DO statement
+   62          | . D0 REPEAT state_cycle UNTIL expression
+   63          | . D0 FOR IDENTIFIER ASSIGN expression FOR_DIRECTION expression DO statement
+   64 statement2: . %empty  [ELSE]
+   65           | . D0 variable ASSIGN expression
+   66           | . D0 IDENTIFIER
+   67           | . D0 IDENTIFIER LPAR real_par RPAR
+   68           | . D0 GOTO UINT
+   69           | . D0 BEGIN state_cycle END
+   70           | . D0 IF expression THEN statement2 ELSE statement2
+   70           | D0 IF expression THEN . statement2 ELSE statement2
+   71           | . D0 WHILE expression DO statement2
+   72           | . D0 REPEAT state_cycle UNTIL expression
+   73           | . D0 FOR IDENTIFIER ASSIGN expression FOR_DIRECTION expression DO statement2
+   74 D0: . UINT COLON
+   75   | . %empty  [BEGIN, GOTO, IF, WHILE, REPEAT, FOR, IDENTIFIER]
+
+    UINT  shift, and go to state 32
+
+    END        reduce using rule 53 (statement)
+    ELSE       reduce using rule 64 (statement2)
+    UNTIL      reduce using rule 53 (statement)
+    SEMICOLON  reduce using rule 53 (statement)
+    $default   reduce using rule 75 (D0)
+
+    statement   go to state 195
+    statement2  go to state 260
+    D0          go to state 197
+
+
+State 253
+
+   53 statement: . %empty  [END, UNTIL, SEMICOLON]
+   54          | . D0 variable ASSIGN expression
+   55          | . D0 IDENTIFIER
+   56          | . D0 IDENTIFIER LPAR real_par RPAR
+   57          | . D0 GOTO UINT
+   58          | . D0 BEGIN state_cycle END
+   59          | . D0 IF expression THEN statement
+   60          | . D0 IF expression THEN statement2 ELSE statement
+   61          | . D0 WHILE expression DO statement
+   61          | D0 WHILE expression DO . statement
+   62          | . D0 REPEAT state_cycle UNTIL expression
+   63          | . D0 FOR IDENTIFIER ASSIGN expression FOR_DIRECTION expression DO statement
+   64 statement2: . %empty  [ELSE]
+   65           | . D0 variable ASSIGN expression
+   66           | . D0 IDENTIFIER
+   67           | . D0 IDENTIFIER LPAR real_par RPAR
+   68           | . D0 GOTO UINT
+   69           | . D0 BEGIN state_cycle END
+   70           | . D0 IF expression THEN statement2 ELSE statement2
+   71           | . D0 WHILE expression DO statement2
+   71           | D0 WHILE expression DO . statement2
+   72           | . D0 REPEAT state_cycle UNTIL expression
+   73           | . D0 FOR IDENTIFIER ASSIGN expression FOR_DIRECTION expression DO statement2
+   74 D0: . UINT COLON
+   75   | . %empty  [BEGIN, GOTO, IF, WHILE, REPEAT, FOR, IDENTIFIER]
+
+    UINT  shift, and go to state 32
+
+    END        reduce using rule 53 (statement)
+    ELSE       reduce using rule 64 (statement2)
+    UNTIL      reduce using rule 53 (statement)
+    SEMICOLON  reduce using rule 53 (statement)
+    $default   reduce using rule 75 (D0)
+
+    statement   go to state 203
+    statement2  go to state 261
+    D0          go to state 197
+
+
+State 254
+
+   62 statement: D0 REPEAT state_cycle UNTIL . expression
+   72 statement2: D0 REPEAT state_cycle UNTIL . expression
+   78 variable: . variable LSBRA ord_expr_cylc RSBRA
+   79         | . IDENTIFIER
+   80 variable_withoutID: . variable LSBRA ord_expr_cylc RSBRA
+   85 expression: . simp_expression
+   86           | . simp_expression OPER_REL simp_expression
+   87           | . simp_expression EQ simp_expression
+   88 simp_expression: . OPER_SIGNADD term_oper
+   89                | . term_oper
+   90 term_oper: . term_oper OPER_SIGNADD term
+   91          | . term_oper OR term
+   92          | . term
+   93 term: . factor
+   94     | . term OPER_MUL factor
+   95 factor: . unsigned_const_withoutID
+   96       | . variable_withoutID
+   97       | . IDENTIFIER
+   98       | . IDENTIFIER LPAR real_par RPAR
+   99       | . LPAR expression RPAR
+  100       | . NOT factor
+  105 unsigned_const_withoutID: . REAL
+  106                         | . STRING
+  107                         | . UINT
+
+    NOT           shift, and go to state 106
+    IDENTIFIER    shift, and go to state 107
+    UINT          shift, and go to state 108
+    REAL          shift, and go to state 109
+    STRING        shift, and go to state 110
+    LPAR          shift, and go to state 111
+    OPER_SIGNADD  shift, and go to state 112
+
+    variable                  go to state 113
+    variable_withoutID        go to state 114
+    expression                go to state 262
+    simp_expression           go to state 116
+    term_oper                 go to state 117
+    term                      go to state 118
+    factor                    go to state 119
+    unsigned_const_withoutID  go to state 120
+
+
+State 255
+
+   63 statement: D0 FOR IDENTIFIER ASSIGN . expression FOR_DIRECTION expression DO statement
+   73 statement2: D0 FOR IDENTIFIER ASSIGN . expression FOR_DIRECTION expression DO statement2
+   78 variable: . variable LSBRA ord_expr_cylc RSBRA
+   79         | . IDENTIFIER
+   80 variable_withoutID: . variable LSBRA ord_expr_cylc RSBRA
+   85 expression: . simp_expression
+   86           | . simp_expression OPER_REL simp_expression
+   87           | . simp_expression EQ simp_expression
+   88 simp_expression: . OPER_SIGNADD term_oper
+   89                | . term_oper
+   90 term_oper: . term_oper OPER_SIGNADD term
+   91          | . term_oper OR term
+   92          | . term
+   93 term: . factor
+   94     | . term OPER_MUL factor
+   95 factor: . unsigned_const_withoutID
+   96       | . variable_withoutID
+   97       | . IDENTIFIER
+   98       | . IDENTIFIER LPAR real_par RPAR
+   99       | . LPAR expression RPAR
+  100       | . NOT factor
+  105 unsigned_const_withoutID: . REAL
+  106                         | . STRING
+  107                         | . UINT
+
+    NOT           shift, and go to state 106
+    IDENTIFIER    shift, and go to state 107
+    UINT          shift, and go to state 108
+    REAL          shift, and go to state 109
+    STRING        shift, and go to state 110
+    LPAR          shift, and go to state 111
+    OPER_SIGNADD  shift, and go to state 112
+
+    variable                  go to state 113
+    variable_withoutID        go to state 114
+    expression                go to state 263
+    simp_expression           go to state 116
+    term_oper                 go to state 117
+    term                      go to state 118
+    factor                    go to state 119
+    unsigned_const_withoutID  go to state 120
+
+
+State 256
+
+   56 statement: D0 IDENTIFIER LPAR real_par . RPAR
+   67 statement2: D0 IDENTIFIER LPAR real_par . RPAR
+   84 real_par: real_par . COMMA expression
+
+    COMMA  shift, and go to state 206
+    RPAR   shift, and go to state 264
+
+
+State 257
+
+   54 statement: D0 variable ASSIGN expression .  [END, UNTIL, SEMICOLON]
+   65 statement2: D0 variable ASSIGN expression .  [ELSE]
+
+    ELSE      reduce using rule 65 (statement2)
+    $default  reduce using rule 54 (statement)
+
+
+State 258
+
+   53 statement: . %empty  [END, UNTIL, SEMICOLON]
+   54          | . D0 variable ASSIGN expression
+   55          | . D0 IDENTIFIER
+   56          | . D0 IDENTIFIER LPAR real_par RPAR
+   57          | . D0 GOTO UINT
+   58          | . D0 BEGIN state_cycle END
+   59          | . D0 IF expression THEN statement
+   60          | . D0 IF expression THEN statement2 ELSE statement
+   61          | . D0 WHILE expression DO statement
+   62          | . D0 REPEAT state_cycle UNTIL expression
+   63          | . D0 FOR IDENTIFIER ASSIGN expression FOR_DIRECTION expression DO statement
+   63          | D0 FOR IDENTIFIER ASSIGN expression FOR_DIRECTION expression DO . statement
+   74 D0: . UINT COLON
+   75   | . %empty  [BEGIN, GOTO, IF, WHILE, REPEAT, FOR, IDENTIFIER]
+
+    UINT  shift, and go to state 32
+
+    END        reduce using rule 53 (statement)
+    UNTIL      reduce using rule 53 (statement)
+    SEMICOLON  reduce using rule 53 (statement)
+    $default   reduce using rule 75 (D0)
+
+    statement  go to state 265
+    D0         go to state 34
+
+
+State 259
+
+   42 form_par: form_par SEMICOLON VAR id_cycl COLON IDENTIFIER .
+
+    $default  reduce using rule 42 (form_par)
+
+
+State 260
+
+   60 statement: D0 IF expression THEN statement2 . ELSE statement
+   70 statement2: D0 IF expression THEN statement2 . ELSE statement2
+
+    ELSE  shift, and go to state 266
+
+
+State 261
+
+   71 statement2: D0 WHILE expression DO statement2 .
+
+    $default  reduce using rule 71 (statement2)
+
+
+State 262
+
+   62 statement: D0 REPEAT state_cycle UNTIL expression .  [END, UNTIL, SEMICOLON]
+   72 statement2: D0 REPEAT state_cycle UNTIL expression .  [ELSE]
+
+    ELSE      reduce using rule 72 (statement2)
+    $default  reduce using rule 62 (statement)
+
+
+State 263
+
+   63 statement: D0 FOR IDENTIFIER ASSIGN expression . FOR_DIRECTION expression DO statement
+   73 statement2: D0 FOR IDENTIFIER ASSIGN expression . FOR_DIRECTION expression DO statement2
+
+    FOR_DIRECTION  shift, and go to state 267
+
+
+State 264
+
+   56 statement: D0 IDENTIFIER LPAR real_par RPAR .  [END, UNTIL, SEMICOLON]
+   67 statement2: D0 IDENTIFIER LPAR real_par RPAR .  [ELSE]
+
+    ELSE      reduce using rule 67 (statement2)
+    $default  reduce using rule 56 (statement)
+
+
+State 265
+
+   63 statement: D0 FOR IDENTIFIER ASSIGN expression FOR_DIRECTION expression DO statement .
+
+    $default  reduce using rule 63 (statement)
+
+
+State 266
+
+   53 statement: . %empty  [END, UNTIL, SEMICOLON]
+   54          | . D0 variable ASSIGN expression
+   55          | . D0 IDENTIFIER
+   56          | . D0 IDENTIFIER LPAR real_par RPAR
+   57          | . D0 GOTO UINT
+   58          | . D0 BEGIN state_cycle END
+   59          | . D0 IF expression THEN statement
+   60          | . D0 IF expression THEN statement2 ELSE statement
+   60          | D0 IF expression THEN statement2 ELSE . statement
+   61          | . D0 WHILE expression DO statement
+   62          | . D0 REPEAT state_cycle UNTIL expression
+   63          | . D0 FOR IDENTIFIER ASSIGN expression FOR_DIRECTION expression DO statement
+   64 statement2: . %empty  [ELSE]
+   65           | . D0 variable ASSIGN expression
+   66           | . D0 IDENTIFIER
+   67           | . D0 IDENTIFIER LPAR real_par RPAR
+   68           | . D0 GOTO UINT
+   69           | . D0 BEGIN state_cycle END
+   70           | . D0 IF expression THEN statement2 ELSE statement2
+   70           | D0 IF expression THEN statement2 ELSE . statement2
+   71           | . D0 WHILE expression DO statement2
+   72           | . D0 REPEAT state_cycle UNTIL expression
+   73           | . D0 FOR IDENTIFIER ASSIGN expression FOR_DIRECTION expression DO statement2
+   74 D0: . UINT COLON
+   75   | . %empty  [BEGIN, GOTO, IF, WHILE, REPEAT, FOR, IDENTIFIER]
+
+    UINT  shift, and go to state 32
+
+    END        reduce using rule 53 (statement)
+    ELSE       reduce using rule 64 (statement2)
+    UNTIL      reduce using rule 53 (statement)
+    SEMICOLON  reduce using rule 53 (statement)
+    $default   reduce using rule 75 (D0)
+
+    statement   go to state 238
+    statement2  go to state 268
+    D0          go to state 197
+
+
+State 267
+
+   63 statement: D0 FOR IDENTIFIER ASSIGN expression FOR_DIRECTION . expression DO statement
+   73 statement2: D0 FOR IDENTIFIER ASSIGN expression FOR_DIRECTION . expression DO statement2
+   78 variable: . variable LSBRA ord_expr_cylc RSBRA
+   79         | . IDENTIFIER
+   80 variable_withoutID: . variable LSBRA ord_expr_cylc RSBRA
+   85 expression: . simp_expression
+   86           | . simp_expression OPER_REL simp_expression
+   87           | . simp_expression EQ simp_expression
+   88 simp_expression: . OPER_SIGNADD term_oper
+   89                | . term_oper
+   90 term_oper: . term_oper OPER_SIGNADD term
+   91          | . term_oper OR term
+   92          | . term
+   93 term: . factor
+   94     | . term OPER_MUL factor
+   95 factor: . unsigned_const_withoutID
+   96       | . variable_withoutID
+   97       | . IDENTIFIER
+   98       | . IDENTIFIER LPAR real_par RPAR
+   99       | . LPAR expression RPAR
+  100       | . NOT factor
+  105 unsigned_const_withoutID: . REAL
+  106                         | . STRING
+  107                         | . UINT
+
+    NOT           shift, and go to state 106
+    IDENTIFIER    shift, and go to state 107
+    UINT          shift, and go to state 108
+    REAL          shift, and go to state 109
+    STRING        shift, and go to state 110
+    LPAR          shift, and go to state 111
+    OPER_SIGNADD  shift, and go to state 112
+
+    variable                  go to state 113
+    variable_withoutID        go to state 114
+    expression                go to state 269
+    simp_expression           go to state 116
+    term_oper                 go to state 117
+    term                      go to state 118
+    factor                    go to state 119
+    unsigned_const_withoutID  go to state 120
+
+
+State 268
+
+   70 statement2: D0 IF expression THEN statement2 ELSE statement2 .
+
+    $default  reduce using rule 70 (statement2)
+
+
+State 269
+
+   63 statement: D0 FOR IDENTIFIER ASSIGN expression FOR_DIRECTION expression . DO statement
+   73 statement2: D0 FOR IDENTIFIER ASSIGN expression FOR_DIRECTION expression . DO statement2
+
+    DO  shift, and go to state 270
+
+
+State 270
+
+   53 statement: . %empty  [END, UNTIL, SEMICOLON]
+   54          | . D0 variable ASSIGN expression
+   55          | . D0 IDENTIFIER
+   56          | . D0 IDENTIFIER LPAR real_par RPAR
+   57          | . D0 GOTO UINT
+   58          | . D0 BEGIN state_cycle END
+   59          | . D0 IF expression THEN statement
+   60          | . D0 IF expression THEN statement2 ELSE statement
+   61          | . D0 WHILE expression DO statement
+   62          | . D0 REPEAT state_cycle UNTIL expression
+   63          | . D0 FOR IDENTIFIER ASSIGN expression FOR_DIRECTION expression DO statement
+   63          | D0 FOR IDENTIFIER ASSIGN expression FOR_DIRECTION expression DO . statement
+   64 statement2: . %empty  [ELSE]
+   65           | . D0 variable ASSIGN expression
+   66           | . D0 IDENTIFIER
+   67           | . D0 IDENTIFIER LPAR real_par RPAR
+   68           | . D0 GOTO UINT
+   69           | . D0 BEGIN state_cycle END
+   70           | . D0 IF expression THEN statement2 ELSE statement2
+   71           | . D0 WHILE expression DO statement2
+   72           | . D0 REPEAT state_cycle UNTIL expression
+   73           | . D0 FOR IDENTIFIER ASSIGN expression FOR_DIRECTION expression DO statement2
+   73           | D0 FOR IDENTIFIER ASSIGN expression FOR_DIRECTION expression DO . statement2
+   74 D0: . UINT COLON
+   75   | . %empty  [BEGIN, GOTO, IF, WHILE, REPEAT, FOR, IDENTIFIER]
+
+    UINT  shift, and go to state 32
+
+    END        reduce using rule 53 (statement)
+    ELSE       reduce using rule 64 (statement2)
+    UNTIL      reduce using rule 53 (statement)
+    SEMICOLON  reduce using rule 53 (statement)
+    $default   reduce using rule 75 (D0)
+
+    statement   go to state 265
+    statement2  go to state 271
+    D0          go to state 197
+
+
+State 271
+
+   73 statement2: D0 FOR IDENTIFIER ASSIGN expression FOR_DIRECTION expression DO statement2 .
+
+    $default  reduce using rule 73 (statement2)

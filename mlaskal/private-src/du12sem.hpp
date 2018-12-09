@@ -20,7 +20,7 @@
 
 namespace mlc {
 
-
+	bool parse_exponent(std::string& buf, int i, std::string& out);
 }
 
 #endif
