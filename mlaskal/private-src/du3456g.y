@@ -17,7 +17,7 @@
 
 	// allow references to semantic types in %type
 #include "dutables.hpp"
-
+#include <list>
 	// avoid no-case warnings when compiling du3g.hpp
 #pragma warning (disable:4065)
 
@@ -47,7 +47,7 @@
 	// other user-required contents
 	#include<assert.h>
 	#include <stdlib.h>
-
+  #include <list>
     /* local stuff */
     using namespace mlc;
 
@@ -105,7 +105,9 @@
 %token<mlc::DUTOKGE_FOR_DIRECTION> FOR_DIRECTION		    /* to, downto */
 
 
-
+%type<std::list<mlc::ls_int_index>> constant
+%type<std::list<mlc::ls_int_index>> unsigned_const
+%type<std::list<mlc::ls_int_index>> unsigned_const_withoutID
 
 %%
 
@@ -142,18 +144,110 @@ C1: UINT {
 			| C1 COMMA UINT {
 				ctx->tab->add_label_entry(@1, $3, ctx->tab->new_label());
 			}
-		;
-C2: IDENTIFIER EQ constant SEMICOLON {
+;
+C2:   IDENTIFIER EQ UINT SEMICOLON { ctx->tab->add_const_int(@1, $1, $3); }
+		| IDENTIFIER EQ REAL SEMICOLON { ctx->tab->add_const_real(@1, $1, $3); }
+		| IDENTIFIER EQ STRING SEMICOLON { ctx->tab->add_const_str(@1, $1, $3); }
+		| IDENTIFIER EQ IDENTIFIER SEMICOLON
+	 	{
+			mlc::symbol_pointer sp = ctx->tab->find_symbol($3);
+			if ( sp->kind() != SKIND_CONST ) { message( DUERR_NOTCONST, @3, * $3); }
 
-}
-			| C2 IDENTIFIER EQ constant SEMICOLON
+			if ( sp->access_const()->type()->cat() == TCAT_INT )
+			{
+  			mlc::ls_int_index val = sp->access_const()->access_int_const()->int_value();
+  			ctx->tab->add_const_int( @1, $1, val);
+			}
+			else if ( sp->access_const()->type()->cat() == TCAT_REAL )
+			{
+  			mlc::ls_real_index val = sp->access_const()->access_real_const()->real_value();
+  			ctx->tab->add_const_real( @1, $1, val);
+			}
+			else if ( sp->access_const()->type()->cat() == TCAT_BOOL )
+			{
+  			bool val = sp->access_const()->access_bool_const()->bool_value();
+  			ctx->tab->add_const_bool( @1, $1, val);
+			}
+			else if ( sp->access_const()->type()->cat() == TCAT_STR )
+			{
+  			mlc::ls_str_index val = sp->access_const()->access_str_const()->str_value();
+  			ctx->tab->add_const_str( @1, $1, val);
+			}
+		}
+		| IDENTIFIER EQ OPER_SIGNADD UINT SEMICOLON
+		{
+			auto val = $3 == mlc::DUTOKGE_OPER_SIGNADD::DUTOKGE_MINUS ? - *$4 : *$4;
+			ctx->tab->add_const_int(@1, $1, ctx->tab->ls_int().add(val));
+		}
+		| IDENTIFIER EQ OPER_SIGNADD REAL SEMICOLON
+		{
+			auto val = $3 == mlc::DUTOKGE_OPER_SIGNADD::DUTOKGE_MINUS ? - *$4 : *$4;
+			ctx->tab->add_const_real(@1, $1, ctx->tab->ls_real().add(val));
+		}
+		| C2 IDENTIFIER EQ UINT SEMICOLON { ctx->tab->add_const_int(@1, $2, $4); }
+		| C2 IDENTIFIER EQ REAL SEMICOLON { ctx->tab->add_const_real(@1, $2, $4); }
+		| C2 IDENTIFIER EQ STRING SEMICOLON { ctx->tab->add_const_str(@1, $2, $4); }
+		| C2 IDENTIFIER EQ IDENTIFIER SEMICOLON
+		{
+				mlc::symbol_pointer sp = ctx->tab->find_symbol($4);
+			if ( sp->kind() != SKIND_CONST ) { message( DUERR_NOTCONST, @4, * $4); }
+
+			if ( sp->access_const()->type()->cat() == TCAT_INT )
+			{
+  			mlc::ls_int_index val = sp->access_const()->access_int_const()->int_value();
+  			ctx->tab->add_const_int( @1, $2, val);
+			}
+			else if ( sp->access_const()->type()->cat() == TCAT_REAL )
+			{
+  			mlc::ls_real_index val = sp->access_const()->access_real_const()->real_value();
+  			ctx->tab->add_const_real( @1, $2, val);
+			}
+			else if ( sp->access_const()->type()->cat() == TCAT_BOOL )
+			{
+  			bool val = sp->access_const()->access_bool_const()->bool_value();
+  			ctx->tab->add_const_bool( @1, $2, val);
+			}
+			else if ( sp->access_const()->type()->cat() == TCAT_STR )
+			{
+  			mlc::ls_str_index val = sp->access_const()->access_str_const()->str_value();
+  			ctx->tab->add_const_str( @1, $2, val);
+			}
+		}
+		| C2 IDENTIFIER EQ OPER_SIGNADD UINT SEMICOLON
+		{
+			auto val = $4 == mlc::DUTOKGE_OPER_SIGNADD::DUTOKGE_MINUS ? - *$5 : *$5;
+			ctx->tab->add_const_int(@1, $2, ctx->tab->ls_int().add(val));
+		}
+		| C2 IDENTIFIER EQ OPER_SIGNADD REAL SEMICOLON
+		{
+			auto val = $4 == mlc::DUTOKGE_OPER_SIGNADD::DUTOKGE_MINUS ? - *$5 : *$5;
+			ctx->tab->add_const_real(@1, $2, ctx->tab->ls_real().add(val));
+		}
+		| IDENTIFIER EQ UINT { ctx->tab->add_const_int(@1, $1, $3); }
 		;
+
 C3: IDENTIFIER EQ  type SEMICOLON {
 
 }
 			| C3 IDENTIFIER EQ type SEMICOLON {
 			}
 		;
+
+constant: unsigned_const {
+
+}
+			| OPER_SIGNADD UINT {
+
+			}
+			| OPER_SIGNADD REAL {
+
+			}
+		;
+unsigned_const: UINT
+			| REAL
+			| STRING
+			| IDENTIFIER /* Constant identifier */
+	;
 
 C4: IDENTIFIER {
 
@@ -314,23 +408,9 @@ unsigned_const_withoutID: REAL
 			| UINT
 		;
 
-unsigned_const: UINT
-			| REAL
-			| STRING
-			| IDENTIFIER /* Constant identifier */
-	;
 
 
-constant: unsigned_const {
 
-}
-			| OPER_SIGNADD UINT {
-
-			}
-			| OPER_SIGNADD REAL {
-
-			}
-		;
 
 
 

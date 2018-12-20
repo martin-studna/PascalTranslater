@@ -46,7 +46,7 @@
 
 	// allow references to semantic types in %type
 #include "dutables.hpp"
-
+#include <list>
 	// avoid no-case warnings when compiling du3g.hpp
 #pragma warning (disable:4065)
 
@@ -270,6 +270,9 @@ namespace yy {
 
       // STRING
       char dummy8[sizeof(mlc::ls_str_index)];
+
+      // unsigned_const_withoutID
+      char dummy9[sizeof(std::list<mlc::ls_int_index>)];
 };
 
     /// Symbol semantic values.
@@ -384,6 +387,8 @@ namespace yy {
   basic_symbol (typename Base::kind_type t, const mlc::ls_real_index v, const location_type& l);
 
   basic_symbol (typename Base::kind_type t, const mlc::ls_str_index v, const location_type& l);
+
+  basic_symbol (typename Base::kind_type t, const std::list<mlc::ls_int_index> v, const location_type& l);
 
 
       /// Constructor for symbols with semantic value.
@@ -815,8 +820,8 @@ namespace yy {
     enum
     {
       yyeof_ = 0,
-      yylast_ = 347,           //< Last index in yytable_.
-      yynnts_ = 44,  //< Number of nonterminal symbols.
+      yylast_ = 360,           //< Last index in yytable_.
+      yynnts_ = 42,  //< Number of nonterminal symbols.
       yyempty_ = -2,
       yyfinal_ = 4, //< Termination state number.
       yyterror_ = 1,
@@ -935,6 +940,10 @@ namespace yy {
         value.copy< mlc::ls_str_index > (other.value);
         break;
 
+      case 86: // unsigned_const_withoutID
+        value.copy< std::list<mlc::ls_int_index> > (other.value);
+        break;
+
       default:
         break;
     }
@@ -982,6 +991,10 @@ namespace yy {
 
       case 29: // STRING
         value.copy< mlc::ls_str_index > (v);
+        break;
+
+      case 86: // unsigned_const_withoutID
+        value.copy< std::list<mlc::ls_int_index> > (v);
         break;
 
       default:
@@ -1055,6 +1068,13 @@ namespace yy {
     , location (l)
   {}
 
+  template <typename Base>
+   mlaskal_parser ::basic_symbol<Base>::basic_symbol (typename Base::kind_type t, const std::list<mlc::ls_int_index> v, const location_type& l)
+    : Base (t)
+    , value (v)
+    , location (l)
+  {}
+
 
   template <typename Base>
   inline
@@ -1103,6 +1123,10 @@ namespace yy {
         value.template destroy< mlc::ls_str_index > ();
         break;
 
+      case 86: // unsigned_const_withoutID
+        value.template destroy< std::list<mlc::ls_int_index> > ();
+        break;
+
       default:
         break;
     }
@@ -1147,6 +1171,10 @@ namespace yy {
 
       case 29: // STRING
         value.move< mlc::ls_str_index > (s.value);
+        break;
+
+      case 86: // unsigned_const_withoutID
+        value.move< std::list<mlc::ls_int_index> > (s.value);
         break;
 
       default:
@@ -1510,7 +1538,7 @@ namespace yy {
 
 
 } // yy
-#line 1514 "du3456g.hpp" // lalr1.cc:371
+#line 1542 "du3456g.hpp" // lalr1.cc:371
 
 
 

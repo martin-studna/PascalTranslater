@@ -63,7 +63,7 @@
 	// other user-required contents
 	#include<assert.h>
 	#include <stdlib.h>
-
+  #include <list>
     /* local stuff */
     using namespace mlc;
 
@@ -289,6 +289,10 @@ namespace yy {
         value.move< mlc::ls_str_index > (that.value);
         break;
 
+      case 86: // unsigned_const_withoutID
+        value.move< std::list<mlc::ls_int_index> > (that.value);
+        break;
+
       default:
         break;
     }
@@ -334,6 +338,10 @@ namespace yy {
 
       case 29: // STRING
         value.copy< mlc::ls_str_index > (that.value);
+        break;
+
+      case 86: // unsigned_const_withoutID
+        value.copy< std::list<mlc::ls_int_index> > (that.value);
         break;
 
       default:
@@ -599,6 +607,10 @@ namespace yy {
         yylhs.value.build< mlc::ls_str_index > ();
         break;
 
+      case 86: // unsigned_const_withoutID
+        yylhs.value.build< std::list<mlc::ls_int_index> > ();
+        break;
+
       default:
         break;
     }
@@ -617,157 +629,263 @@ namespace yy {
         switch (yyn)
           {
   case 6:
-#line 124 "C:\\Users\\Martin\\source\\repos\\PascalTranslater\\mlaskal\\private-src\\du3456g.y" // lalr1.cc:846
+#line 126 "C:\\Users\\Martin\\source\\repos\\PascalTranslater\\mlaskal\\private-src\\du3456g.y" // lalr1.cc:846
     {
 
 }
-#line 625 "du3456g.cpp" // lalr1.cc:846
+#line 637 "du3456g.cpp" // lalr1.cc:846
     break;
 
   case 10:
-#line 130 "C:\\Users\\Martin\\source\\repos\\PascalTranslater\\mlaskal\\private-src\\du3456g.y" // lalr1.cc:846
+#line 132 "C:\\Users\\Martin\\source\\repos\\PascalTranslater\\mlaskal\\private-src\\du3456g.y" // lalr1.cc:846
     {
 
 }
-#line 633 "du3456g.cpp" // lalr1.cc:846
+#line 645 "du3456g.cpp" // lalr1.cc:846
     break;
 
   case 15:
-#line 139 "C:\\Users\\Martin\\source\\repos\\PascalTranslater\\mlaskal\\private-src\\du3456g.y" // lalr1.cc:846
+#line 141 "C:\\Users\\Martin\\source\\repos\\PascalTranslater\\mlaskal\\private-src\\du3456g.y" // lalr1.cc:846
     {
 	ctx->tab->add_label_entry(yystack_[0].location, yystack_[0].value.as< mlc::ls_int_index > (), ctx->tab->new_label());
 }
-#line 641 "du3456g.cpp" // lalr1.cc:846
+#line 653 "du3456g.cpp" // lalr1.cc:846
     break;
 
   case 16:
-#line 142 "C:\\Users\\Martin\\source\\repos\\PascalTranslater\\mlaskal\\private-src\\du3456g.y" // lalr1.cc:846
+#line 144 "C:\\Users\\Martin\\source\\repos\\PascalTranslater\\mlaskal\\private-src\\du3456g.y" // lalr1.cc:846
     {
 				ctx->tab->add_label_entry(yystack_[2].location, yystack_[0].value.as< mlc::ls_int_index > (), ctx->tab->new_label());
 			}
-#line 649 "du3456g.cpp" // lalr1.cc:846
+#line 661 "du3456g.cpp" // lalr1.cc:846
     break;
 
   case 17:
-#line 147 "C:\\Users\\Martin\\source\\repos\\PascalTranslater\\mlaskal\\private-src\\du3456g.y" // lalr1.cc:846
-    {
+#line 148 "C:\\Users\\Martin\\source\\repos\\PascalTranslater\\mlaskal\\private-src\\du3456g.y" // lalr1.cc:846
+    { ctx->tab->add_const_int(yystack_[3].location, yystack_[3].value.as< mlc::ls_id_index > (), yystack_[1].value.as< mlc::ls_int_index > ()); }
+#line 667 "du3456g.cpp" // lalr1.cc:846
+    break;
 
-}
-#line 657 "du3456g.cpp" // lalr1.cc:846
+  case 18:
+#line 149 "C:\\Users\\Martin\\source\\repos\\PascalTranslater\\mlaskal\\private-src\\du3456g.y" // lalr1.cc:846
+    { ctx->tab->add_const_real(yystack_[3].location, yystack_[3].value.as< mlc::ls_id_index > (), yystack_[1].value.as< mlc::ls_real_index > ()); }
+#line 673 "du3456g.cpp" // lalr1.cc:846
     break;
 
   case 19:
-#line 152 "C:\\Users\\Martin\\source\\repos\\PascalTranslater\\mlaskal\\private-src\\du3456g.y" // lalr1.cc:846
-    {
-
-}
-#line 665 "du3456g.cpp" // lalr1.cc:846
+#line 150 "C:\\Users\\Martin\\source\\repos\\PascalTranslater\\mlaskal\\private-src\\du3456g.y" // lalr1.cc:846
+    { ctx->tab->add_const_str(yystack_[3].location, yystack_[3].value.as< mlc::ls_id_index > (), yystack_[1].value.as< mlc::ls_str_index > ()); }
+#line 679 "du3456g.cpp" // lalr1.cc:846
     break;
 
   case 20:
-#line 155 "C:\\Users\\Martin\\source\\repos\\PascalTranslater\\mlaskal\\private-src\\du3456g.y" // lalr1.cc:846
+#line 152 "C:\\Users\\Martin\\source\\repos\\PascalTranslater\\mlaskal\\private-src\\du3456g.y" // lalr1.cc:846
     {
+			mlc::symbol_pointer sp = ctx->tab->find_symbol(yystack_[1].value.as< mlc::ls_id_index > ());
+			if ( sp->kind() != SKIND_CONST ) { message( DUERR_NOTCONST, yystack_[1].location, * yystack_[1].value.as< mlc::ls_id_index > ()); }
+
+			if ( sp->access_const()->type()->cat() == TCAT_INT )
+			{
+  			mlc::ls_int_index val = sp->access_const()->access_int_const()->int_value();
+  			ctx->tab->add_const_int( yystack_[3].location, yystack_[3].value.as< mlc::ls_id_index > (), val);
 			}
-#line 672 "du3456g.cpp" // lalr1.cc:846
+			else if ( sp->access_const()->type()->cat() == TCAT_REAL )
+			{
+  			mlc::ls_real_index val = sp->access_const()->access_real_const()->real_value();
+  			ctx->tab->add_const_real( yystack_[3].location, yystack_[3].value.as< mlc::ls_id_index > (), val);
+			}
+			else if ( sp->access_const()->type()->cat() == TCAT_BOOL )
+			{
+  			bool val = sp->access_const()->access_bool_const()->bool_value();
+  			ctx->tab->add_const_bool( yystack_[3].location, yystack_[3].value.as< mlc::ls_id_index > (), val);
+			}
+			else if ( sp->access_const()->type()->cat() == TCAT_STR )
+			{
+  			mlc::ls_str_index val = sp->access_const()->access_str_const()->str_value();
+  			ctx->tab->add_const_str( yystack_[3].location, yystack_[3].value.as< mlc::ls_id_index > (), val);
+			}
+		}
+#line 709 "du3456g.cpp" // lalr1.cc:846
     break;
 
   case 21:
-#line 159 "C:\\Users\\Martin\\source\\repos\\PascalTranslater\\mlaskal\\private-src\\du3456g.y" // lalr1.cc:846
+#line 178 "C:\\Users\\Martin\\source\\repos\\PascalTranslater\\mlaskal\\private-src\\du3456g.y" // lalr1.cc:846
     {
-
-}
-#line 680 "du3456g.cpp" // lalr1.cc:846
+			auto val = yystack_[2].value.as< mlc::DUTOKGE_OPER_SIGNADD > () == mlc::DUTOKGE_OPER_SIGNADD::DUTOKGE_MINUS ? - *yystack_[1].value.as< mlc::ls_int_index > () : *yystack_[1].value.as< mlc::ls_int_index > ();
+			ctx->tab->add_const_int(yystack_[4].location, yystack_[4].value.as< mlc::ls_id_index > (), ctx->tab->ls_int().add(val));
+		}
+#line 718 "du3456g.cpp" // lalr1.cc:846
     break;
 
-  case 25:
-#line 167 "C:\\Users\\Martin\\source\\repos\\PascalTranslater\\mlaskal\\private-src\\du3456g.y" // lalr1.cc:846
+  case 22:
+#line 183 "C:\\Users\\Martin\\source\\repos\\PascalTranslater\\mlaskal\\private-src\\du3456g.y" // lalr1.cc:846
     {
-}
-#line 687 "du3456g.cpp" // lalr1.cc:846
-    break;
-
-  case 37:
-#line 185 "C:\\Users\\Martin\\source\\repos\\PascalTranslater\\mlaskal\\private-src\\du3456g.y" // lalr1.cc:846
-    {
-
-}
-#line 695 "du3456g.cpp" // lalr1.cc:846
-    break;
-
-  case 38:
-#line 188 "C:\\Users\\Martin\\source\\repos\\PascalTranslater\\mlaskal\\private-src\\du3456g.y" // lalr1.cc:846
-    {
-
-				}
-#line 703 "du3456g.cpp" // lalr1.cc:846
-    break;
-
-  case 40:
-#line 194 "C:\\Users\\Martin\\source\\repos\\PascalTranslater\\mlaskal\\private-src\\du3456g.y" // lalr1.cc:846
-    {
-
-				}
-#line 711 "du3456g.cpp" // lalr1.cc:846
-    break;
-
-  case 41:
-#line 199 "C:\\Users\\Martin\\source\\repos\\PascalTranslater\\mlaskal\\private-src\\du3456g.y" // lalr1.cc:846
-    {
-
-}
-#line 719 "du3456g.cpp" // lalr1.cc:846
-    break;
-
-  case 55:
-#line 225 "C:\\Users\\Martin\\source\\repos\\PascalTranslater\\mlaskal\\private-src\\du3456g.y" // lalr1.cc:846
-    {
-
-				}
+			auto val = yystack_[2].value.as< mlc::DUTOKGE_OPER_SIGNADD > () == mlc::DUTOKGE_OPER_SIGNADD::DUTOKGE_MINUS ? - *yystack_[1].value.as< mlc::ls_real_index > () : *yystack_[1].value.as< mlc::ls_real_index > ();
+			ctx->tab->add_const_real(yystack_[4].location, yystack_[4].value.as< mlc::ls_id_index > (), ctx->tab->ls_real().add(val));
+		}
 #line 727 "du3456g.cpp" // lalr1.cc:846
     break;
 
-  case 57:
+  case 23:
+#line 187 "C:\\Users\\Martin\\source\\repos\\PascalTranslater\\mlaskal\\private-src\\du3456g.y" // lalr1.cc:846
+    { ctx->tab->add_const_int(yystack_[4].location, yystack_[3].value.as< mlc::ls_id_index > (), yystack_[1].value.as< mlc::ls_int_index > ()); }
+#line 733 "du3456g.cpp" // lalr1.cc:846
+    break;
+
+  case 24:
+#line 188 "C:\\Users\\Martin\\source\\repos\\PascalTranslater\\mlaskal\\private-src\\du3456g.y" // lalr1.cc:846
+    { ctx->tab->add_const_real(yystack_[4].location, yystack_[3].value.as< mlc::ls_id_index > (), yystack_[1].value.as< mlc::ls_real_index > ()); }
+#line 739 "du3456g.cpp" // lalr1.cc:846
+    break;
+
+  case 25:
+#line 189 "C:\\Users\\Martin\\source\\repos\\PascalTranslater\\mlaskal\\private-src\\du3456g.y" // lalr1.cc:846
+    { ctx->tab->add_const_str(yystack_[4].location, yystack_[3].value.as< mlc::ls_id_index > (), yystack_[1].value.as< mlc::ls_str_index > ()); }
+#line 745 "du3456g.cpp" // lalr1.cc:846
+    break;
+
+  case 26:
+#line 191 "C:\\Users\\Martin\\source\\repos\\PascalTranslater\\mlaskal\\private-src\\du3456g.y" // lalr1.cc:846
+    {
+				mlc::symbol_pointer sp = ctx->tab->find_symbol(yystack_[1].value.as< mlc::ls_id_index > ());
+			if ( sp->kind() != SKIND_CONST ) { message( DUERR_NOTCONST, yystack_[1].location, * yystack_[1].value.as< mlc::ls_id_index > ()); }
+
+			if ( sp->access_const()->type()->cat() == TCAT_INT )
+			{
+  			mlc::ls_int_index val = sp->access_const()->access_int_const()->int_value();
+  			ctx->tab->add_const_int( yystack_[4].location, yystack_[3].value.as< mlc::ls_id_index > (), val);
+			}
+			else if ( sp->access_const()->type()->cat() == TCAT_REAL )
+			{
+  			mlc::ls_real_index val = sp->access_const()->access_real_const()->real_value();
+  			ctx->tab->add_const_real( yystack_[4].location, yystack_[3].value.as< mlc::ls_id_index > (), val);
+			}
+			else if ( sp->access_const()->type()->cat() == TCAT_BOOL )
+			{
+  			bool val = sp->access_const()->access_bool_const()->bool_value();
+  			ctx->tab->add_const_bool( yystack_[4].location, yystack_[3].value.as< mlc::ls_id_index > (), val);
+			}
+			else if ( sp->access_const()->type()->cat() == TCAT_STR )
+			{
+  			mlc::ls_str_index val = sp->access_const()->access_str_const()->str_value();
+  			ctx->tab->add_const_str( yystack_[4].location, yystack_[3].value.as< mlc::ls_id_index > (), val);
+			}
+		}
+#line 775 "du3456g.cpp" // lalr1.cc:846
+    break;
+
+  case 27:
+#line 217 "C:\\Users\\Martin\\source\\repos\\PascalTranslater\\mlaskal\\private-src\\du3456g.y" // lalr1.cc:846
+    {
+			auto val = yystack_[2].value.as< mlc::DUTOKGE_OPER_SIGNADD > () == mlc::DUTOKGE_OPER_SIGNADD::DUTOKGE_MINUS ? - *yystack_[1].value.as< mlc::ls_int_index > () : *yystack_[1].value.as< mlc::ls_int_index > ();
+			ctx->tab->add_const_int(yystack_[5].location, yystack_[4].value.as< mlc::ls_id_index > (), ctx->tab->ls_int().add(val));
+		}
+#line 784 "du3456g.cpp" // lalr1.cc:846
+    break;
+
+  case 28:
+#line 222 "C:\\Users\\Martin\\source\\repos\\PascalTranslater\\mlaskal\\private-src\\du3456g.y" // lalr1.cc:846
+    {
+			auto val = yystack_[2].value.as< mlc::DUTOKGE_OPER_SIGNADD > () == mlc::DUTOKGE_OPER_SIGNADD::DUTOKGE_MINUS ? - *yystack_[1].value.as< mlc::ls_real_index > () : *yystack_[1].value.as< mlc::ls_real_index > ();
+			ctx->tab->add_const_real(yystack_[5].location, yystack_[4].value.as< mlc::ls_id_index > (), ctx->tab->ls_real().add(val));
+		}
+#line 793 "du3456g.cpp" // lalr1.cc:846
+    break;
+
+  case 29:
+#line 226 "C:\\Users\\Martin\\source\\repos\\PascalTranslater\\mlaskal\\private-src\\du3456g.y" // lalr1.cc:846
+    { ctx->tab->add_const_int(yystack_[2].location, yystack_[2].value.as< mlc::ls_id_index > (), yystack_[0].value.as< mlc::ls_int_index > ()); }
+#line 799 "du3456g.cpp" // lalr1.cc:846
+    break;
+
+  case 30:
 #line 229 "C:\\Users\\Martin\\source\\repos\\PascalTranslater\\mlaskal\\private-src\\du3456g.y" // lalr1.cc:846
     {
 
-				}
-#line 735 "du3456g.cpp" // lalr1.cc:846
+}
+#line 807 "du3456g.cpp" // lalr1.cc:846
     break;
 
-  case 66:
-#line 242 "C:\\Users\\Martin\\source\\repos\\PascalTranslater\\mlaskal\\private-src\\du3456g.y" // lalr1.cc:846
+  case 31:
+#line 232 "C:\\Users\\Martin\\source\\repos\\PascalTranslater\\mlaskal\\private-src\\du3456g.y" // lalr1.cc:846
     {
-
-				}
-#line 743 "du3456g.cpp" // lalr1.cc:846
+			}
+#line 814 "du3456g.cpp" // lalr1.cc:846
     break;
 
-  case 113:
-#line 325 "C:\\Users\\Martin\\source\\repos\\PascalTranslater\\mlaskal\\private-src\\du3456g.y" // lalr1.cc:846
+  case 32:
+#line 252 "C:\\Users\\Martin\\source\\repos\\PascalTranslater\\mlaskal\\private-src\\du3456g.y" // lalr1.cc:846
     {
 
 }
-#line 751 "du3456g.cpp" // lalr1.cc:846
+#line 822 "du3456g.cpp" // lalr1.cc:846
     break;
 
-  case 114:
-#line 328 "C:\\Users\\Martin\\source\\repos\\PascalTranslater\\mlaskal\\private-src\\du3456g.y" // lalr1.cc:846
+  case 36:
+#line 260 "C:\\Users\\Martin\\source\\repos\\PascalTranslater\\mlaskal\\private-src\\du3456g.y" // lalr1.cc:846
+    {
+}
+#line 829 "du3456g.cpp" // lalr1.cc:846
+    break;
+
+  case 48:
+#line 278 "C:\\Users\\Martin\\source\\repos\\PascalTranslater\\mlaskal\\private-src\\du3456g.y" // lalr1.cc:846
     {
 
-			}
-#line 759 "du3456g.cpp" // lalr1.cc:846
+}
+#line 837 "du3456g.cpp" // lalr1.cc:846
     break;
 
-  case 115:
-#line 331 "C:\\Users\\Martin\\source\\repos\\PascalTranslater\\mlaskal\\private-src\\du3456g.y" // lalr1.cc:846
+  case 49:
+#line 281 "C:\\Users\\Martin\\source\\repos\\PascalTranslater\\mlaskal\\private-src\\du3456g.y" // lalr1.cc:846
     {
 
-			}
-#line 767 "du3456g.cpp" // lalr1.cc:846
+				}
+#line 845 "du3456g.cpp" // lalr1.cc:846
+    break;
+
+  case 51:
+#line 287 "C:\\Users\\Martin\\source\\repos\\PascalTranslater\\mlaskal\\private-src\\du3456g.y" // lalr1.cc:846
+    {
+
+				}
+#line 853 "du3456g.cpp" // lalr1.cc:846
+    break;
+
+  case 52:
+#line 292 "C:\\Users\\Martin\\source\\repos\\PascalTranslater\\mlaskal\\private-src\\du3456g.y" // lalr1.cc:846
+    {
+
+}
+#line 861 "du3456g.cpp" // lalr1.cc:846
+    break;
+
+  case 66:
+#line 318 "C:\\Users\\Martin\\source\\repos\\PascalTranslater\\mlaskal\\private-src\\du3456g.y" // lalr1.cc:846
+    {
+
+				}
+#line 869 "du3456g.cpp" // lalr1.cc:846
+    break;
+
+  case 68:
+#line 322 "C:\\Users\\Martin\\source\\repos\\PascalTranslater\\mlaskal\\private-src\\du3456g.y" // lalr1.cc:846
+    {
+
+				}
+#line 877 "du3456g.cpp" // lalr1.cc:846
+    break;
+
+  case 77:
+#line 335 "C:\\Users\\Martin\\source\\repos\\PascalTranslater\\mlaskal\\private-src\\du3456g.y" // lalr1.cc:846
+    {
+
+				}
+#line 885 "du3456g.cpp" // lalr1.cc:846
     break;
 
 
-#line 771 "du3456g.cpp" // lalr1.cc:846
+#line 889 "du3456g.cpp" // lalr1.cc:846
           default:
             break;
           }
@@ -1024,84 +1142,86 @@ namespace yy {
   }
 
 
-  const short int  mlaskal_parser ::yypact_ninf_ = -151;
+  const short int  mlaskal_parser ::yypact_ninf_ = -174;
 
-  const signed char  mlaskal_parser ::yytable_ninf_ = -103;
+  const signed char  mlaskal_parser ::yytable_ninf_ = -114;
 
   const short int
    mlaskal_parser ::yypact_[] =
   {
-      72,    31,    93,    79,  -151,   192,    95,   121,   195,   215,
-      10,   225,   226,   161,   203,  -151,  -151,  -151,  -151,  -151,
-     220,   122,   223,  -151,   113,   196,    63,   222,    80,  -151,
-     139,   102,   224,  -151,   103,    18,   227,   126,  -151,  -151,
-    -151,   229,   230,    17,    17,  -151,   234,   148,   231,  -151,
-       3,   232,  -151,   228,     3,  -151,   147,  -151,    10,   236,
-     107,   107,   138,   240,   177,   166,  -151,    33,    57,   241,
-      57,    17,    17,   121,   195,   215,   219,  -151,   238,  -151,
-    -151,  -151,   239,  -151,  -151,  -151,  -151,  -151,   216,  -151,
-     242,   148,   218,   233,  -151,   221,   243,  -151,  -151,   237,
-       3,  -151,   245,     3,    23,  -151,   156,    89,  -151,  -151,
-    -151,   107,   156,   244,  -151,   255,    51,    44,   214,  -151,
-    -151,   257,    84,   246,   107,   107,   107,  -151,   251,  -151,
-      49,   200,  -151,   142,   248,   249,    70,    54,     9,  -151,
-    -151,  -151,  -151,  -151,  -151,   250,     7,  -151,  -151,  -151,
-       7,   253,  -151,   254,  -151,  -151,   107,   252,    44,   107,
-      29,   107,   107,   156,   156,   156,    33,   107,   107,   184,
-    -151,    65,  -151,  -151,   201,    74,  -151,   259,   261,   247,
-    -151,  -151,  -151,  -151,  -151,  -151,  -151,  -151,    87,  -151,
-    -151,  -151,   186,  -151,    98,  -151,   272,   136,  -151,  -151,
-     214,   214,  -151,  -151,  -151,   256,   107,  -151,   107,  -151,
-     264,   251,   204,  -151,  -151,   265,     7,   279,  -151,   258,
-      33,    10,   266,   107,   107,   138,   268,     1,   199,   107,
-    -151,  -151,  -151,   208,   269,  -151,  -151,     3,  -151,    38,
-     280,   282,   283,   111,   263,   107,   107,   285,   273,  -151,
-    -151,   284,    29,    29,   107,   107,   187,   288,    33,  -151,
-     289,  -151,   290,   267,   291,  -151,    29,   107,  -151,   293,
-      29,  -151
+      64,    71,   105,    98,  -174,   187,   134,   149,   156,   173,
+       8,   186,   191,   195,   217,  -174,  -174,  -174,  -174,  -174,
+     136,   207,   227,  -174,    88,   228,    63,   229,    75,  -174,
+      47,   124,   230,  -174,   111,    12,   231,   -11,  -174,  -174,
+    -174,   233,   235,   225,   225,  -174,   240,   139,   237,  -174,
+       3,   238,  -174,   234,     3,  -174,   130,  -174,     8,   241,
+     114,   114,   183,   243,   176,   180,  -174,    38,    49,   246,
+      49,   225,   225,   149,   156,   173,   236,  -174,   244,  -174,
+    -174,  -174,   245,  -174,   247,   248,   249,   250,   126,   144,
+     251,   239,  -174,   179,   252,  -174,  -174,   253,     3,  -174,
+     254,     3,    13,  -174,   161,    17,  -174,  -174,  -174,   114,
+     161,   255,  -174,   257,   -14,    35,   242,  -174,  -174,   262,
+     100,   256,   114,   114,   114,  -174,   260,  -174,    66,   142,
+    -174,    86,   258,   261,    54,    25,    58,  -174,  -174,  -174,
+    -174,  -174,  -174,  -174,   264,   265,   267,   268,   269,   270,
+     226,    61,  -174,  -174,  -174,    61,   271,  -174,   272,  -174,
+    -174,   114,   273,    35,   114,    27,   114,   114,   161,   161,
+     161,    38,   114,   114,   202,  -174,    59,  -174,  -174,   213,
+      69,  -174,   266,   277,   274,  -174,  -174,  -174,  -174,  -174,
+    -174,  -174,  -174,  -174,  -174,  -174,   275,   276,  -174,  -174,
+      60,  -174,  -174,  -174,   203,  -174,    85,  -174,   287,   137,
+    -174,  -174,   242,   242,  -174,  -174,  -174,   263,   114,  -174,
+     114,  -174,   284,   260,   214,  -174,  -174,   285,  -174,  -174,
+      61,   299,  -174,   278,    38,     8,   286,   114,   114,   183,
+     288,    -1,   211,   114,  -174,  -174,  -174,   218,   289,  -174,
+    -174,     3,  -174,    16,   300,   302,   301,   118,   279,   114,
+     114,   303,   295,  -174,  -174,   306,    27,    27,   114,   114,
+     204,   307,    38,  -174,   308,  -174,   309,   283,   311,  -174,
+      27,   114,  -174,   310,    27,  -174
   };
 
   const unsigned char
    mlaskal_parser ::yydefact_[] =
   {
        0,     0,     0,     0,     1,     0,     0,     0,     0,     0,
-      76,     0,     0,     0,     0,     4,     7,     9,    11,    12,
-       0,     0,     0,    15,     0,     0,     0,     0,     0,    21,
-       0,     0,     0,    77,     0,     0,    37,     0,     2,     3,
+      87,     0,     0,     0,     0,     4,     7,     9,    11,    12,
+       0,     0,     0,    15,     0,     0,     0,     0,     0,    32,
+       0,     0,     0,    88,     0,     0,    48,     0,     2,     3,
       13,     0,     0,     0,     0,     5,     0,     0,     0,     6,
-       0,     0,     8,     0,     0,    10,     0,    75,    76,     0,
-       0,     0,    76,     0,    56,     0,    14,    76,     0,     0,
-       0,     0,     0,     0,     0,     0,     0,    36,     0,    30,
-      32,    34,     0,    16,   112,   109,   110,   111,     0,   113,
-       0,     0,     0,    48,   105,     0,     0,    49,    47,     0,
-       0,    22,     0,     0,     0,    58,     0,    98,   108,   106,
-     107,     0,     0,     0,    97,     0,    86,    90,    93,    94,
-      96,     0,     0,     0,     0,     0,     0,    78,     0,    45,
-       0,     0,    39,     0,     0,     0,     0,     0,     0,    29,
-      25,    26,   114,   115,    17,     0,     0,   103,   104,    19,
-       0,     0,    23,     0,    59,   101,     0,     0,    89,     0,
-      76,     0,     0,     0,     0,     0,    76,     0,     0,     0,
-      84,     0,    82,    55,     0,     0,    38,     0,     0,     0,
-      27,    28,    31,    33,    35,    18,   102,    52,     0,    51,
-      20,    24,     0,   100,     0,    60,     0,     0,    88,    87,
-      92,    91,    95,    62,    63,     0,     0,    57,     0,    79,
-       0,     0,     0,    46,    42,     0,     0,     0,    99,    81,
-      76,    76,     0,     0,     0,    76,     0,    56,     0,     0,
-      85,    83,    41,     0,     0,    40,    53,     0,    61,     0,
-      58,     0,     0,     0,     0,     0,     0,     0,     0,    44,
-      50,    59,    76,    76,     0,     0,     0,    55,    76,    43,
-       0,    72,    63,     0,    57,    64,    76,     0,    71,     0,
-      76,    74
+       0,     0,     8,     0,     0,    10,     0,    86,    87,     0,
+       0,     0,    87,     0,    67,     0,    14,    87,     0,     0,
+       0,     0,     0,     0,     0,     0,     0,    47,     0,    41,
+      43,    45,     0,    16,     0,    29,     0,     0,     0,     0,
+       0,    59,   116,     0,     0,    60,    58,     0,     0,    33,
+       0,     0,     0,    69,     0,   109,   119,   117,   118,     0,
+       0,     0,   108,     0,    97,   101,   104,   105,   107,     0,
+       0,     0,     0,     0,     0,    89,     0,    56,     0,     0,
+      50,     0,     0,     0,     0,     0,     0,    40,    36,    37,
+      20,    17,    18,    19,     0,     0,     0,     0,     0,     0,
+       0,     0,   114,   115,    30,     0,     0,    34,     0,    70,
+     112,     0,     0,   100,     0,    87,     0,     0,     0,     0,
+       0,    87,     0,     0,     0,    95,     0,    93,    66,     0,
+       0,    49,     0,     0,     0,    38,    39,    42,    44,    46,
+      21,    22,    26,    23,    24,    25,     0,     0,   113,    63,
+       0,    62,    31,    35,     0,   111,     0,    71,     0,     0,
+      99,    98,   103,   102,   106,    73,    74,     0,     0,    68,
+       0,    90,     0,     0,     0,    57,    53,     0,    27,    28,
+       0,     0,   110,    92,    87,    87,     0,     0,     0,    87,
+       0,    67,     0,     0,    96,    94,    52,     0,     0,    51,
+      64,     0,    72,     0,    69,     0,     0,     0,     0,     0,
+       0,     0,     0,    55,    61,    70,    87,    87,     0,     0,
+       0,    66,    87,    54,     0,    83,    74,     0,    68,    75,
+      87,     0,    82,     0,    87,    85
   };
 
   const short int
    mlaskal_parser ::yypgoto_[] =
   {
-    -151,  -151,  -151,   304,   296,   287,   286,   292,     0,  -151,
-     260,   262,   -23,   270,  -151,   -28,   271,   179,   180,   298,
-     299,   274,  -117,   -48,  -151,  -134,  -151,   -65,  -113,  -150,
-     -55,   -30,  -151,   157,  -147,   -60,    88,   209,    82,   -93,
-     170,  -151,  -151,   235
+    -174,  -174,  -174,   282,   316,   305,   304,   312,     0,  -174,
+     210,   259,   -22,   280,  -174,   -31,   281,   200,   201,   315,
+     317,   290,  -108,   -48,  -174,  -140,  -174,   -65,  -173,  -157,
+     -55,   -30,  -174,   174,  -151,   -60,    89,   232,    90,   -92,
+     184,  -174
   };
 
   const short int
@@ -1109,89 +1229,93 @@ namespace yy {
   {
       -1,     2,    13,    76,    15,    16,    17,    18,    77,    24,
       26,    28,    30,    31,    20,    78,    79,    80,    81,    21,
-      22,   130,   131,    96,    97,    98,   188,    33,   196,    34,
-      35,   113,   114,   171,   169,   170,   116,   117,   118,   119,
-      99,   120,    89,    90
+      22,   128,   129,    94,    95,    96,   200,    33,   208,    34,
+      35,   111,   112,   176,   174,   175,   114,   115,   116,   117,
+      97,   118
   };
 
   const short int
    mlaskal_parser ::yytable_[] =
   {
-     115,   121,   127,   104,    65,    19,   102,   122,    56,   192,
-     197,   174,   187,   155,    19,    92,    82,    10,   -67,   -54,
-      40,     6,    73,    74,    75,    10,    19,    66,    19,    93,
-      94,    19,   154,   186,    94,    29,   245,    32,   -54,   -80,
-     -54,   -80,   -54,   134,   135,    95,   -65,   251,    67,    95,
-     -54,   157,   151,    67,   -54,   153,    32,     3,   212,   -54,
-      32,    75,    10,   -54,   128,   172,   173,   163,    67,     8,
-       9,    10,   202,    11,    12,     1,    74,    75,    10,   175,
-      51,   211,   236,   129,   161,   176,   164,     9,    10,    48,
-      11,    12,   162,     4,   233,   195,    48,   208,   256,   172,
-     129,   203,   197,   197,   209,   167,    51,   204,   205,     5,
-      10,    58,    11,    12,    67,    56,   197,    59,    60,   216,
-     197,    61,    23,    62,   156,    63,   217,   -80,    29,    64,
-     208,   106,   254,   107,   108,   109,   110,   219,   184,   260,
-     261,    67,   111,    45,   221,    46,   230,    25,   231,   112,
-     222,   223,    43,   268,   224,   238,   225,   271,   226,   -54,
-      69,    70,   227,   241,   242,    32,   239,   228,   -54,   247,
-     243,    53,   175,    54,    84,    85,    86,    87,   179,    53,
-     106,   103,   107,   108,   109,   110,   257,   195,   203,   250,
-      88,   111,    38,   265,   262,   263,     6,     7,     8,     9,
-      10,   238,    11,    12,   125,   265,   126,   269,     7,     8,
-       9,    10,   124,    11,    12,   -80,   206,   -80,   206,   206,
-     207,    27,   218,   264,    73,    74,    75,    10,    10,    47,
-      11,    12,   177,   177,   178,   210,   177,   125,   234,   246,
-     177,    29,   248,   142,   143,   200,   201,   147,   148,   198,
-     199,    36,    37,    44,   101,    50,   146,   165,    57,    71,
-      72,    83,    68,   105,    91,   100,   123,   132,   140,   141,
-    -102,   160,   144,   149,   150,   152,   166,   129,   180,   181,
-     185,   215,   159,   190,   191,   213,   168,   214,   193,   220,
-     232,   235,   237,   240,   244,   249,   -79,   -69,   252,   259,
-     229,   -70,   253,   255,   258,   -66,   266,   -73,   -68,    14,
-      39,   267,   270,    49,    52,   182,   194,   183,    41,    42,
-     189,   158,     0,    55,     0,     0,   145,     0,     0,     0,
-       0,     0,     0,   136,     0,     0,   137,     0,     0,     0,
-       0,     0,     0,     0,   133,   138,     0,   139
+     113,   119,   125,   102,    65,    19,   100,   120,   209,    56,
+     204,   199,   160,    82,    19,    90,   -78,   -65,   179,   166,
+      40,    66,   159,    69,    70,   265,    19,   167,    19,    91,
+      92,    19,    75,    10,   259,    32,   -65,   -91,   -65,   -91,
+     132,   133,    67,    67,   -76,    93,    67,   -65,   -65,   162,
+     156,    51,   161,   158,    32,   -91,   126,   -65,   168,   -65,
+      74,    75,    10,   177,   178,    32,    10,     1,   -65,     8,
+       9,    10,   224,    11,    12,   127,   223,   169,   214,    53,
+      48,    54,     9,    10,    29,    11,    12,   198,    92,    48,
+     250,   220,   230,   274,   275,   127,   180,     3,   221,   231,
+     207,    51,   181,    93,   177,     4,   215,   282,   270,   209,
+     209,   285,   216,   217,    56,   247,   180,   220,    45,    58,
+      46,   172,   184,   209,   233,    59,    60,   209,     5,    61,
+      67,    62,    10,    63,    11,    12,   189,    64,   104,   268,
+     105,   106,   107,   108,    10,   235,    11,    12,    67,   109,
+      29,   236,   237,   144,   145,   238,   110,   239,   244,   240,
+     245,    23,    53,   241,   101,    84,    85,    86,    87,   252,
+     146,   147,   148,   149,   182,    25,   183,   255,   256,   242,
+     253,    88,    27,   261,   257,   104,   150,   105,   106,   107,
+     108,     6,     7,     8,     9,    10,   109,    11,    12,    29,
+     271,   207,   215,   264,   -65,   152,   153,   279,   276,   277,
+      32,   122,    36,   -65,   -91,   252,   -91,    37,   123,   279,
+     124,   283,     7,     8,     9,    10,    38,    11,    12,     6,
+      73,    74,    75,    10,   218,   218,   218,    43,   219,   232,
+     278,    73,    74,    75,    10,   182,   182,   222,   248,   123,
+     182,   260,   262,   196,   197,   210,   211,    44,   212,   213,
+      99,    47,    50,    71,    57,    72,    68,    83,   103,   121,
+      89,    98,   130,   165,   138,   139,  -113,   140,   141,   142,
+     143,   171,   154,   134,   157,   170,   127,    14,   185,   151,
+     155,   186,   225,   164,   190,   191,   173,   192,   193,   194,
+     195,   202,   203,   226,   234,   228,   229,   243,   227,   205,
+     246,   249,   251,   254,   258,   263,   -90,   -80,   266,   269,
+     267,   273,   272,   -81,   -77,   280,   -84,   281,   -79,   284,
+      39,    49,    52,   135,   187,    41,   188,    42,   206,   201,
+       0,     0,   163,    55,     0,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,   136,     0,   137,     0,     0,
+     131
   };
 
   const short int
    mlaskal_parser ::yycheck_[] =
   {
-      60,    61,    67,    58,    34,     5,    54,    62,    31,   156,
-     160,   128,   146,   106,    14,    12,    44,     8,    17,     9,
-      20,     4,     5,     6,     7,     8,    26,     9,    28,    26,
-      27,    31,     9,    26,    27,    26,    35,    27,     9,    38,
-      30,    40,     9,    71,    72,    42,    17,     9,    30,    42,
-      21,   111,   100,    30,    21,   103,    27,    26,   175,    30,
-      27,     7,     8,    30,     7,   125,   126,    23,    30,     6,
-       7,     8,   165,    10,    11,     3,     6,     7,     8,    30,
-      26,     7,   216,    26,    33,    36,    42,     7,     8,    26,
-      10,    11,    41,     0,   211,   160,    26,    32,   245,   159,
-      26,   166,   252,   253,    39,    21,    26,   167,   168,    30,
-       8,     8,    10,    11,    30,   138,   266,    14,    15,    32,
-     270,    18,    27,    20,    35,    22,    39,    38,    26,    26,
-      32,    24,    21,    26,    27,    28,    29,    39,   138,   252,
-     253,    30,    35,    30,     8,    32,   206,    26,   208,    42,
-      14,    15,    30,   266,    18,   220,    20,   270,    22,    21,
-      34,    35,    26,   223,   224,    27,   221,   197,    30,   229,
-     225,    32,    30,    34,    26,    27,    28,    29,    36,    32,
-      24,    34,    26,    27,    28,    29,   246,   252,   253,   237,
-      42,    35,    31,   258,   254,   255,     4,     5,     6,     7,
-       8,   266,    10,    11,    38,   270,    40,   267,     5,     6,
-       7,     8,    35,    10,    11,    38,    32,    40,    32,    32,
-      36,    26,    36,    36,     5,     6,     7,     8,     8,    33,
-      10,    11,    32,    32,    34,    34,    32,    38,    34,    40,
-      32,    26,    34,    27,    28,   163,   164,    26,    27,   161,
-     162,    26,    26,    30,    26,    33,    38,    43,    34,    30,
-      30,    27,    35,    27,    33,    33,    26,    26,    30,    30,
-      37,    16,    30,    30,    37,    30,    19,    26,    30,    30,
-      30,    34,    38,    30,    30,    26,    40,    26,    36,    17,
-      26,    26,    13,    27,    26,    26,    38,    17,    16,    26,
-      44,    17,    19,    40,    19,    17,    17,    17,    17,     5,
-      14,    44,    19,    26,    28,   136,   159,   137,    20,    20,
-     150,   112,    -1,    31,    -1,    -1,    91,    -1,    -1,    -1,
-      -1,    -1,    -1,    73,    -1,    -1,    74,    -1,    -1,    -1,
-      -1,    -1,    -1,    -1,    70,    75,    -1,    76
+      60,    61,    67,    58,    34,     5,    54,    62,   165,    31,
+     161,   151,   104,    44,    14,    12,    17,     9,   126,    33,
+      20,     9,     9,    34,    35,     9,    26,    41,    28,    26,
+      27,    31,     7,     8,    35,    27,     9,    38,    30,    40,
+      71,    72,    30,    30,    17,    42,    30,     9,    21,   109,
+      98,    26,    35,   101,    27,    38,     7,    30,    23,    21,
+       6,     7,     8,   123,   124,    27,     8,     3,    30,     6,
+       7,     8,   180,    10,    11,    26,     7,    42,   170,    32,
+      26,    34,     7,     8,    26,    10,    11,    26,    27,    26,
+     230,    32,    32,   266,   267,    26,    30,    26,    39,    39,
+     165,    26,    36,    42,   164,     0,   171,   280,   259,   266,
+     267,   284,   172,   173,   136,   223,    30,    32,    30,     8,
+      32,    21,    36,   280,    39,    14,    15,   284,    30,    18,
+      30,    20,     8,    22,    10,    11,   136,    26,    24,    21,
+      26,    27,    28,    29,     8,     8,    10,    11,    30,    35,
+      26,    14,    15,    27,    28,    18,    42,    20,   218,    22,
+     220,    27,    32,    26,    34,    26,    27,    28,    29,   234,
+      26,    27,    28,    29,    32,    26,    34,   237,   238,   209,
+     235,    42,    26,   243,   239,    24,    42,    26,    27,    28,
+      29,     4,     5,     6,     7,     8,    35,    10,    11,    26,
+     260,   266,   267,   251,    21,    26,    27,   272,   268,   269,
+      27,    35,    26,    30,    38,   280,    40,    26,    38,   284,
+      40,   281,     5,     6,     7,     8,    31,    10,    11,     4,
+       5,     6,     7,     8,    32,    32,    32,    30,    36,    36,
+      36,     5,     6,     7,     8,    32,    32,    34,    34,    38,
+      32,    40,    34,    27,    28,   166,   167,    30,   168,   169,
+      26,    33,    33,    30,    34,    30,    35,    27,    27,    26,
+      33,    33,    26,    16,    30,    30,    37,    30,    30,    30,
+      30,    19,    30,    73,    30,    43,    26,     5,    30,    38,
+      37,    30,    26,    38,    30,    30,    40,    30,    30,    30,
+      30,    30,    30,    26,    17,    30,    30,    44,    34,    36,
+      26,    26,    13,    27,    26,    26,    38,    17,    16,    40,
+      19,    26,    19,    17,    17,    17,    17,    44,    17,    19,
+      14,    26,    28,    74,   134,    20,   135,    20,   164,   155,
+      -1,    -1,   110,    31,    -1,    -1,    -1,    -1,    -1,    -1,
+      -1,    -1,    -1,    -1,    -1,    75,    -1,    76,    -1,    -1,
+      70
   };
 
   const unsigned char
@@ -1205,60 +1329,61 @@ namespace yy {
       33,    26,    51,    32,    34,    52,    57,    34,     8,    14,
       15,    18,    20,    22,    26,    76,     9,    30,    35,    34,
       35,    30,    30,     5,     6,     7,    48,    53,    60,    61,
-      62,    63,    60,    27,    26,    27,    28,    29,    42,    87,
-      88,    33,    12,    26,    27,    42,    68,    69,    70,    85,
-      33,    26,    68,    34,    75,    27,    24,    26,    27,    28,
-      29,    35,    42,    76,    77,    80,    81,    82,    83,    84,
-      86,    80,    75,    26,    35,    38,    40,    72,     7,    26,
-      66,    67,    26,    66,    60,    60,    55,    56,    58,    61,
-      30,    30,    27,    28,    30,    88,    38,    26,    27,    30,
-      37,    68,    30,    68,     9,    84,    35,    80,    82,    38,
-      16,    33,    41,    23,    42,    43,    19,    21,    40,    79,
-      80,    78,    80,    80,    67,    30,    36,    32,    34,    36,
-      30,    30,    62,    63,    53,    30,    26,    70,    71,    85,
-      30,    30,    79,    36,    78,    72,    73,    74,    81,    81,
-      83,    83,    84,    72,    80,    80,    32,    36,    32,    39,
-      34,     7,    67,    26,    26,    34,    32,    39,    36,    39,
-      17,     8,    14,    15,    18,    20,    22,    26,    76,    44,
-      80,    80,    26,    67,    34,    26,    70,    13,    72,    75,
-      27,    80,    80,    75,    26,    35,    40,    80,    34,    26,
-      68,     9,    16,    19,    21,    40,    79,    80,    19,    26,
-      73,    73,    80,    80,    36,    72,    17,    44,    73,    80,
-      19,    73
+      62,    63,    60,    27,    26,    27,    28,    29,    42,    33,
+      12,    26,    27,    42,    68,    69,    70,    85,    33,    26,
+      68,    34,    75,    27,    24,    26,    27,    28,    29,    35,
+      42,    76,    77,    80,    81,    82,    83,    84,    86,    80,
+      75,    26,    35,    38,    40,    72,     7,    26,    66,    67,
+      26,    66,    60,    60,    55,    56,    58,    61,    30,    30,
+      30,    30,    30,    30,    27,    28,    26,    27,    28,    29,
+      42,    38,    26,    27,    30,    37,    68,    30,    68,     9,
+      84,    35,    80,    82,    38,    16,    33,    41,    23,    42,
+      43,    19,    21,    40,    79,    80,    78,    80,    80,    67,
+      30,    36,    32,    34,    36,    30,    30,    62,    63,    53,
+      30,    30,    30,    30,    30,    30,    27,    28,    26,    70,
+      71,    85,    30,    30,    79,    36,    78,    72,    73,    74,
+      81,    81,    83,    83,    84,    72,    80,    80,    32,    36,
+      32,    39,    34,     7,    67,    26,    26,    34,    30,    30,
+      32,    39,    36,    39,    17,     8,    14,    15,    18,    20,
+      22,    26,    76,    44,    80,    80,    26,    67,    34,    26,
+      70,    13,    72,    75,    27,    80,    80,    75,    26,    35,
+      40,    80,    34,    26,    68,     9,    16,    19,    21,    40,
+      79,    80,    19,    26,    73,    73,    80,    80,    36,    72,
+      17,    44,    73,    80,    19,    73
   };
 
   const unsigned char
    mlaskal_parser ::yyr1_[] =
   {
        0,    45,    46,    47,    47,    48,    49,    49,    50,    50,
-      51,    51,    52,    52,    53,    54,    54,    55,    55,    56,
-      56,    57,    57,    58,    58,    59,    59,    59,    59,    60,
-      60,    61,    61,    62,    62,    63,    63,    64,    64,    65,
-      65,    66,    66,    66,    66,    67,    67,    68,    68,    68,
-      69,    70,    71,    71,    72,    72,    72,    72,    72,    72,
-      72,    72,    72,    72,    72,    73,    73,    73,    73,    73,
-      73,    73,    73,    73,    73,    74,    74,    75,    75,    76,
-      76,    77,    78,    78,    79,    79,    80,    80,    80,    81,
-      81,    82,    82,    82,    83,    83,    84,    84,    84,    84,
-      84,    84,    85,    85,    85,    85,    86,    86,    86,    87,
-      87,    87,    87,    88,    88,    88
+      51,    51,    52,    52,    53,    54,    54,    55,    55,    55,
+      55,    55,    55,    55,    55,    55,    55,    55,    55,    55,
+      56,    56,    57,    57,    58,    58,    59,    59,    59,    59,
+      60,    60,    61,    61,    62,    62,    63,    63,    64,    64,
+      65,    65,    66,    66,    66,    66,    67,    67,    68,    68,
+      68,    69,    70,    71,    71,    72,    72,    72,    72,    72,
+      72,    72,    72,    72,    72,    72,    73,    73,    73,    73,
+      73,    73,    73,    73,    73,    73,    74,    74,    75,    75,
+      76,    76,    77,    78,    78,    79,    79,    80,    80,    80,
+      81,    81,    82,    82,    82,    83,    83,    84,    84,    84,
+      84,    84,    84,    85,    85,    85,    85,    86,    86,    86
   };
 
   const unsigned char
    mlaskal_parser ::yyr2_[] =
   {
        0,     2,     5,     2,     1,     3,     3,     1,     3,     1,
-       3,     1,     1,     2,     3,     1,     3,     4,     5,     4,
-       5,     1,     3,     4,     5,     4,     4,     5,     5,     2,
-       1,     3,     1,     3,     1,     3,     1,     2,     5,     4,
-       7,     4,     3,     6,     5,     1,     3,     1,     1,     1,
-       6,     3,     1,     3,     0,     4,     2,     5,     3,     4,
-       5,     7,     5,     5,     9,     0,     4,     2,     5,     3,
-       4,     7,     5,     5,     9,     2,     0,     1,     3,     4,
-       1,     4,     1,     3,     1,     3,     1,     3,     3,     2,
-       1,     3,     3,     1,     1,     3,     1,     1,     1,     4,
-       3,     2,     1,     2,     2,     1,     1,     1,     1,     1,
-       1,     1,     1,     1,     2,     2
+       3,     1,     1,     2,     3,     1,     3,     4,     4,     4,
+       4,     5,     5,     5,     5,     5,     5,     6,     6,     3,
+       4,     5,     1,     3,     4,     5,     4,     4,     5,     5,
+       2,     1,     3,     1,     3,     1,     3,     1,     2,     5,
+       4,     7,     4,     3,     6,     5,     1,     3,     1,     1,
+       1,     6,     3,     1,     3,     0,     4,     2,     5,     3,
+       4,     5,     7,     5,     5,     9,     0,     4,     2,     5,
+       3,     4,     7,     5,     5,     9,     2,     0,     1,     3,
+       4,     1,     4,     1,     3,     1,     3,     1,     3,     3,
+       2,     1,     3,     3,     1,     1,     3,     1,     1,     1,
+       4,     3,     2,     1,     2,     2,     1,     1,     1,     1
   };
 
 
@@ -1282,25 +1407,25 @@ namespace yy {
   "statement", "statement2", "D0", "state_cycle", "variable",
   "variable_withoutID", "ord_expr_cylc", "real_par", "expression",
   "simp_expression", "term_oper", "term", "factor", "ord_const",
-  "unsigned_const_withoutID", "unsigned_const", "constant", YY_NULL
+  "unsigned_const_withoutID", YY_NULL
   };
 
 #if YYDEBUG
   const unsigned short int
    mlaskal_parser ::yyrline_[] =
   {
-       0,   112,   112,   119,   120,   122,   124,   127,   128,   129,
-     130,   133,   134,   135,   137,   139,   142,   146,   150,   152,
-     155,   159,   162,   164,   165,   167,   169,   170,   171,   174,
-     175,   178,   179,   180,   181,   182,   183,   185,   188,   193,
-     194,   199,   202,   203,   204,   207,   208,   211,   212,   213,
-     216,   218,   220,   221,   224,   225,   228,   229,   232,   233,
-     234,   235,   236,   237,   238,   241,   242,   245,   246,   247,
-     248,   249,   250,   251,   252,   255,   255,   257,   258,   264,
-     265,   267,   269,   270,   274,   275,   278,   279,   280,   283,
-     284,   287,   288,   289,   292,   293,   296,   297,   298,   299,
-     300,   301,   307,   308,   309,   310,   313,   314,   315,   318,
-     319,   320,   321,   325,   328,   331
+       0,   114,   114,   121,   122,   124,   126,   129,   130,   131,
+     132,   135,   136,   137,   139,   141,   144,   148,   149,   150,
+     151,   177,   182,   187,   188,   189,   190,   216,   221,   226,
+     229,   232,   252,   255,   257,   258,   260,   262,   263,   264,
+     267,   268,   271,   272,   273,   274,   275,   276,   278,   281,
+     286,   287,   292,   295,   296,   297,   300,   301,   304,   305,
+     306,   309,   311,   313,   314,   317,   318,   321,   322,   325,
+     326,   327,   328,   329,   330,   331,   334,   335,   338,   339,
+     340,   341,   342,   343,   344,   345,   348,   348,   350,   351,
+     357,   358,   360,   362,   363,   367,   368,   371,   372,   373,
+     376,   377,   380,   381,   382,   385,   386,   389,   390,   391,
+     392,   393,   394,   400,   401,   402,   403,   406,   407,   408
   };
 
   // Print the state stack on the debug stream.
@@ -1335,8 +1460,8 @@ namespace yy {
 
 
 } // yy
-#line 1339 "du3456g.cpp" // lalr1.cc:1156
-#line 340 "C:\\Users\\Martin\\source\\repos\\PascalTranslater\\mlaskal\\private-src\\du3456g.y" // lalr1.cc:1157
+#line 1464 "du3456g.cpp" // lalr1.cc:1156
+#line 419 "C:\\Users\\Martin\\source\\repos\\PascalTranslater\\mlaskal\\private-src\\du3456g.y" // lalr1.cc:1157
 
 
 
