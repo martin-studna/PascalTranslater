@@ -616,8 +616,158 @@ namespace yy {
       {
         switch (yyn)
           {
+  case 6:
+#line 124 "C:\\Users\\Martin\\source\\repos\\PascalTranslater\\mlaskal\\private-src\\du3456g.y" // lalr1.cc:846
+    {
 
-#line 621 "du3456g.cpp" // lalr1.cc:846
+}
+#line 625 "du3456g.cpp" // lalr1.cc:846
+    break;
+
+  case 10:
+#line 130 "C:\\Users\\Martin\\source\\repos\\PascalTranslater\\mlaskal\\private-src\\du3456g.y" // lalr1.cc:846
+    {
+
+}
+#line 633 "du3456g.cpp" // lalr1.cc:846
+    break;
+
+  case 15:
+#line 139 "C:\\Users\\Martin\\source\\repos\\PascalTranslater\\mlaskal\\private-src\\du3456g.y" // lalr1.cc:846
+    {
+	ctx->tab->add_label_entry(yystack_[0].location, yystack_[0].value.as< mlc::ls_int_index > (), ctx->tab->new_label());
+}
+#line 641 "du3456g.cpp" // lalr1.cc:846
+    break;
+
+  case 16:
+#line 142 "C:\\Users\\Martin\\source\\repos\\PascalTranslater\\mlaskal\\private-src\\du3456g.y" // lalr1.cc:846
+    {
+				ctx->tab->add_label_entry(yystack_[2].location, yystack_[0].value.as< mlc::ls_int_index > (), ctx->tab->new_label());
+			}
+#line 649 "du3456g.cpp" // lalr1.cc:846
+    break;
+
+  case 17:
+#line 147 "C:\\Users\\Martin\\source\\repos\\PascalTranslater\\mlaskal\\private-src\\du3456g.y" // lalr1.cc:846
+    {
+
+}
+#line 657 "du3456g.cpp" // lalr1.cc:846
+    break;
+
+  case 19:
+#line 152 "C:\\Users\\Martin\\source\\repos\\PascalTranslater\\mlaskal\\private-src\\du3456g.y" // lalr1.cc:846
+    {
+
+}
+#line 665 "du3456g.cpp" // lalr1.cc:846
+    break;
+
+  case 20:
+#line 155 "C:\\Users\\Martin\\source\\repos\\PascalTranslater\\mlaskal\\private-src\\du3456g.y" // lalr1.cc:846
+    {
+			}
+#line 672 "du3456g.cpp" // lalr1.cc:846
+    break;
+
+  case 21:
+#line 159 "C:\\Users\\Martin\\source\\repos\\PascalTranslater\\mlaskal\\private-src\\du3456g.y" // lalr1.cc:846
+    {
+
+}
+#line 680 "du3456g.cpp" // lalr1.cc:846
+    break;
+
+  case 25:
+#line 167 "C:\\Users\\Martin\\source\\repos\\PascalTranslater\\mlaskal\\private-src\\du3456g.y" // lalr1.cc:846
+    {
+}
+#line 687 "du3456g.cpp" // lalr1.cc:846
+    break;
+
+  case 37:
+#line 185 "C:\\Users\\Martin\\source\\repos\\PascalTranslater\\mlaskal\\private-src\\du3456g.y" // lalr1.cc:846
+    {
+
+}
+#line 695 "du3456g.cpp" // lalr1.cc:846
+    break;
+
+  case 38:
+#line 188 "C:\\Users\\Martin\\source\\repos\\PascalTranslater\\mlaskal\\private-src\\du3456g.y" // lalr1.cc:846
+    {
+
+				}
+#line 703 "du3456g.cpp" // lalr1.cc:846
+    break;
+
+  case 40:
+#line 194 "C:\\Users\\Martin\\source\\repos\\PascalTranslater\\mlaskal\\private-src\\du3456g.y" // lalr1.cc:846
+    {
+
+				}
+#line 711 "du3456g.cpp" // lalr1.cc:846
+    break;
+
+  case 41:
+#line 199 "C:\\Users\\Martin\\source\\repos\\PascalTranslater\\mlaskal\\private-src\\du3456g.y" // lalr1.cc:846
+    {
+
+}
+#line 719 "du3456g.cpp" // lalr1.cc:846
+    break;
+
+  case 55:
+#line 225 "C:\\Users\\Martin\\source\\repos\\PascalTranslater\\mlaskal\\private-src\\du3456g.y" // lalr1.cc:846
+    {
+
+				}
+#line 727 "du3456g.cpp" // lalr1.cc:846
+    break;
+
+  case 57:
+#line 229 "C:\\Users\\Martin\\source\\repos\\PascalTranslater\\mlaskal\\private-src\\du3456g.y" // lalr1.cc:846
+    {
+
+				}
+#line 735 "du3456g.cpp" // lalr1.cc:846
+    break;
+
+  case 66:
+#line 242 "C:\\Users\\Martin\\source\\repos\\PascalTranslater\\mlaskal\\private-src\\du3456g.y" // lalr1.cc:846
+    {
+
+				}
+#line 743 "du3456g.cpp" // lalr1.cc:846
+    break;
+
+  case 113:
+#line 325 "C:\\Users\\Martin\\source\\repos\\PascalTranslater\\mlaskal\\private-src\\du3456g.y" // lalr1.cc:846
+    {
+
+}
+#line 751 "du3456g.cpp" // lalr1.cc:846
+    break;
+
+  case 114:
+#line 328 "C:\\Users\\Martin\\source\\repos\\PascalTranslater\\mlaskal\\private-src\\du3456g.y" // lalr1.cc:846
+    {
+
+			}
+#line 759 "du3456g.cpp" // lalr1.cc:846
+    break;
+
+  case 115:
+#line 331 "C:\\Users\\Martin\\source\\repos\\PascalTranslater\\mlaskal\\private-src\\du3456g.y" // lalr1.cc:846
+    {
+
+			}
+#line 767 "du3456g.cpp" // lalr1.cc:846
+    break;
+
+
+#line 771 "du3456g.cpp" // lalr1.cc:846
           default:
             break;
           }
@@ -1139,18 +1289,18 @@ namespace yy {
   const unsigned short int
    mlaskal_parser ::yyrline_[] =
   {
-       0,   112,   112,   119,   120,   122,   124,   125,   126,   127,
-     128,   129,   130,   131,   133,   135,   136,   138,   139,   141,
-     142,   145,   146,   148,   149,   151,   152,   153,   154,   157,
-     158,   161,   162,   163,   164,   165,   166,   168,   169,   172,
-     173,   176,   177,   178,   179,   182,   183,   186,   187,   188,
-     191,   193,   195,   196,   199,   200,   201,   202,   203,   204,
-     205,   206,   207,   208,   209,   212,   213,   214,   215,   216,
-     217,   218,   219,   220,   221,   224,   224,   228,   229,   235,
-     236,   238,   240,   241,   245,   246,   249,   250,   251,   254,
-     255,   258,   259,   260,   263,   264,   267,   268,   269,   270,
-     271,   272,   278,   279,   280,   281,   284,   285,   286,   289,
-     290,   291,   292,   296,   297,   298
+       0,   112,   112,   119,   120,   122,   124,   127,   128,   129,
+     130,   133,   134,   135,   137,   139,   142,   146,   150,   152,
+     155,   159,   162,   164,   165,   167,   169,   170,   171,   174,
+     175,   178,   179,   180,   181,   182,   183,   185,   188,   193,
+     194,   199,   202,   203,   204,   207,   208,   211,   212,   213,
+     216,   218,   220,   221,   224,   225,   228,   229,   232,   233,
+     234,   235,   236,   237,   238,   241,   242,   245,   246,   247,
+     248,   249,   250,   251,   252,   255,   255,   257,   258,   264,
+     265,   267,   269,   270,   274,   275,   278,   279,   280,   283,
+     284,   287,   288,   289,   292,   293,   296,   297,   298,   299,
+     300,   301,   307,   308,   309,   310,   313,   314,   315,   318,
+     319,   320,   321,   325,   328,   331
   };
 
   // Print the state stack on the debug stream.
@@ -1185,8 +1335,8 @@ namespace yy {
 
 
 } // yy
-#line 1189 "du3456g.cpp" // lalr1.cc:1156
-#line 305 "C:\\Users\\Martin\\source\\repos\\PascalTranslater\\mlaskal\\private-src\\du3456g.y" // lalr1.cc:1157
+#line 1339 "du3456g.cpp" // lalr1.cc:1156
+#line 340 "C:\\Users\\Martin\\source\\repos\\PascalTranslater\\mlaskal\\private-src\\du3456g.y" // lalr1.cc:1157
 
 
 

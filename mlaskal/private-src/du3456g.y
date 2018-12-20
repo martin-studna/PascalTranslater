@@ -119,36 +119,52 @@ mlaskal:	    PROGRAM
 block_P: start_block const_block
 			| const_block
 	;
-start_block: LABEL C1 SEMICOLON;
+start_block: LABEL C1 SEMICOLON ;
 
-const_block: CONST C2 type_block
+const_block: CONST C2 type_block {
+
+}
 			| type_block;
 type_block: TYPE C3 var_block
 			| var_block;
-var_block: VAR C5 procedure_block
+var_block: VAR C5 procedure_block {
+
+}
 			| procedure_block;
 procedure_block: end_block
 			| C7 end_block
 	;
 end_block: BEGIN state_cycle END;
 
-C1: UINT
-			| C1 COMMA UINT
+C1: UINT {
+	ctx->tab->add_label_entry(@1, $1, ctx->tab->new_label());
+}
+			| C1 COMMA UINT {
+				ctx->tab->add_label_entry(@1, $3, ctx->tab->new_label());
+			}
 		;
-C2: IDENTIFIER EQ constant SEMICOLON
+C2: IDENTIFIER EQ constant SEMICOLON {
+
+}
 			| C2 IDENTIFIER EQ constant SEMICOLON
 		;
-C3: IDENTIFIER EQ  type SEMICOLON
-			| C3 IDENTIFIER EQ type SEMICOLON
+C3: IDENTIFIER EQ  type SEMICOLON {
+
+}
+			| C3 IDENTIFIER EQ type SEMICOLON {
+			}
 		;
 
-C4: IDENTIFIER
+C4: IDENTIFIER {
+
+}
 			| C4 COMMA IDENTIFIER
 		;
 C5: C4 COLON type SEMICOLON
 			| C5 C4 COLON type SEMICOLON
 		;
-C7: procedure_header SEMICOLON block SEMICOLON
+C7: procedure_header SEMICOLON block SEMICOLON {
+}
 			| function_header SEMICOLON block SEMICOLON
 			| C7 procedure_header SEMICOLON block SEMICOLON
 			| C7 function_header SEMICOLON block SEMICOLON
@@ -165,18 +181,26 @@ type_block2: TYPE C3 var_block2
 var_block2: VAR C5 end_block;
 			| end_block
 
-procedure_header: PROCEDURE IDENTIFIER
-				| PROCEDURE IDENTIFIER LPAR form_par RPAR
+procedure_header: PROCEDURE IDENTIFIER {
+
+}
+				| PROCEDURE IDENTIFIER LPAR form_par RPAR {
+
+				}
 		;
 
 function_header: FUNCTION IDENTIFIER COLON IDENTIFIER
-				| FUNCTION IDENTIFIER LPAR form_par RPAR COLON IDENTIFIER
+				| FUNCTION IDENTIFIER LPAR form_par RPAR COLON IDENTIFIER /* Scalar type identifier */ {
+
+				}
 		;
 
-form_par: VAR id_cycl COLON IDENTIFIER
-				| id_cycl COLON IDENTIFIER
-				| form_par SEMICOLON VAR id_cycl COLON IDENTIFIER
-				| form_par SEMICOLON id_cycl COLON IDENTIFIER
+form_par: VAR id_cycl COLON IDENTIFIER /* Type identifier */ {
+
+}
+				| id_cycl COLON IDENTIFIER /* Type identifier */
+				| form_par SEMICOLON VAR id_cycl COLON IDENTIFIER /* Type identifier */
+				| form_par SEMICOLON id_cycl COLON IDENTIFIER /* Type identifier */
 		;
 
 id_cycl: IDENTIFIER
@@ -184,7 +208,7 @@ id_cycl: IDENTIFIER
 		;
 
 type: ord_type
-				| IDENTIFIER
+				| IDENTIFIER /* type identifier */
 				| struc_type
 		;
 
@@ -197,9 +221,13 @@ ord_type_cycl: ord_type
 		;
 
 statement: %empty
-				| D0 variable ASSIGN expression
+				| D0 variable ASSIGN expression {
+
+				}
 				| D0 IDENTIFIER
-				| D0 IDENTIFIER LPAR real_par RPAR
+				| D0 IDENTIFIER LPAR real_par RPAR {
+
+				}
 				| D0 GOTO UINT
 				| D0 BEGIN state_cycle END
 				| D0 IF expression THEN statement
@@ -210,9 +238,11 @@ statement: %empty
 		;
 
 statement2: %empty
-				| D0 variable ASSIGN expression
+				| D0 variable ASSIGN expression {
+
+				}
 				| D0 IDENTIFIER
-				| D0 IDENTIFIER LPAR real_par RPAR
+				| D0 IDENTIFIER LPAR real_par RPAR /* */
 				| D0 GOTO UINT
 				| D0 BEGIN state_cycle END
 				| D0 IF expression THEN statement2 ELSE statement2
@@ -223,8 +253,6 @@ statement2: %empty
 
 D0: UINT COLON | %empty;
 
-
-
 state_cycle: statement
 				| state_cycle SEMICOLON statement
 		;
@@ -233,7 +261,7 @@ state_cycle: statement
 
 
 variable: variable LSBRA ord_expr_cylc RSBRA
-				| IDENTIFIER
+				| IDENTIFIER /* variable identifier */
 		;
 variable_withoutID: variable LSBRA ord_expr_cylc RSBRA;
 
@@ -266,8 +294,8 @@ term: factor
 
 factor: unsigned_const_withoutID
 				| variable_withoutID
-				| IDENTIFIER
-				| IDENTIFIER LPAR real_par RPAR
+				| IDENTIFIER /* Function identifier */
+				| IDENTIFIER LPAR real_par RPAR /* Function identifier */
 				| LPAR expression RPAR
 				| NOT factor
 		;
@@ -275,8 +303,8 @@ factor: unsigned_const_withoutID
 
 
 
-ord_const: IDENTIFIER
-			| OPER_SIGNADD IDENTIFIER
+ord_const: IDENTIFIER /* Integer constant identifier */
+			| OPER_SIGNADD IDENTIFIER /* Integer constant identifier */
 			| OPER_SIGNADD UINT
 			| UINT
 		;
@@ -289,13 +317,19 @@ unsigned_const_withoutID: REAL
 unsigned_const: UINT
 			| REAL
 			| STRING
-			| IDENTIFIER
+			| IDENTIFIER /* Constant identifier */
 	;
 
 
-constant: unsigned_const
-			| OPER_SIGNADD UINT
-			| OPER_SIGNADD REAL
+constant: unsigned_const {
+
+}
+			| OPER_SIGNADD UINT {
+
+			}
+			| OPER_SIGNADD REAL {
+
+			}
 		;
 
 
